@@ -9,7 +9,20 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.yot.craftrpg.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <toolWindow factoryClass="com.yot.craftrpg.toolWindow.CraftRPGToolWindowFactory"
+                    id="Craft RPG"
+                    anchor="right"
+                    icon="com.yot.craftrpg.CraftRPGIcons.TOOL_WINDOW"/>
         <postStartupActivity implementation="com.yot.craftrpg.startup.MyProjectActivity" />
     </extensions>
+
+    <projectServices>
+        <service serviceImplementation="com.yot.craftrpg.services.RefactoringDetectionService"/>
+        <service serviceImplementation="com.yot.craftrpg.services.PlayerStateService"/>
+    </projectServices>
+
+    <projectListeners>
+        <listener class="com.yot.craftrpg.listeners.RefactoringEventListenerImpl"
+                  topic="com.intellij.refactoring.listeners.RefactoringEventListener"/>
+    </projectListeners>
 </idea-plugin>

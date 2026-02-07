@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 13 13">
+  <!-- Shield -->
+  <path d="M6.5 1 L11 2.5 L11 6.5 Q11 9.5 6.5 12 Q2 9.5 2 6.5 L2 2.5 Z"
+        fill="#6B7FD7" stroke="#2E4A7C" stroke-width="0.8"/>
+
+  <!-- Code symbol -->
+  <text x="4" y="9" font-family="monospace" font-size="6" font-weight="bold" fill="#FFD700">
+    &lt;/&gt;
+  </text>
+</svg>
