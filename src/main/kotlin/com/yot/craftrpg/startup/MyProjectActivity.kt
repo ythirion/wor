@@ -1,4 +1,4 @@
-package com.github.ythirion.craftrpg.startup
+package com.yot.craftrpg.startup
 
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project

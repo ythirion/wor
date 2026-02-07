@@ -1,4 +1,4 @@
-package com.github.ythirion.craftrpg.toolWindow
+package com.yot.craftrpg.toolWindow
 
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
@@ -8,8 +8,8 @@ import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.content.ContentFactory
-import com.github.ythirion.craftrpg.MyBundle
-import com.github.ythirion.craftrpg.services.MyProjectService
+import com.yot.craftrpg.MyBundle
+import com.yot.craftrpg.services.MyProjectService
 import javax.swing.JButton
 
 

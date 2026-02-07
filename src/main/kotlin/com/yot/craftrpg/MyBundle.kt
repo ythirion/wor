@@ -1,4 +1,4 @@
-package com.github.ythirion.craftrpg
+package com.yot.craftrpg
 
 import com.intellij.DynamicBundle
 import org.jetbrains.annotations.NonNls
