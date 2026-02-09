@@ -95,6 +95,8 @@ Once installed, the plugin automatically tracks your refactoring actions:
 5. **Complete Quests**: Track your progress in the Quests tab
 6. **Export Your Data**: Use the export button to save your achievements
 
+<!-- Plugin description end -->
+
 ## Architecture
 
 ### Event Flow
@@ -200,9 +202,3 @@ Contributions are welcome! Feel free to:
 - Report bugs
 - Suggest new features
 - Submit pull requests
-
----
-
-*Level up your refactoring skills, one action at a time!* ⚔️
-
-<!-- Plugin description end -->
