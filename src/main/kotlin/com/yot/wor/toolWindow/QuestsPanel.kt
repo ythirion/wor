@@ -11,11 +11,13 @@ import com.yot.wor.domain.QuestCategory
 import com.yot.wor.domain.QuestStatus
 import com.yot.wor.services.QuestService
 import java.awt.BorderLayout
+import java.awt.Color
 import java.awt.Font
 import javax.swing.BorderFactory
 import javax.swing.BoxLayout
 import javax.swing.JPanel
 import javax.swing.JProgressBar
+import javax.swing.plaf.basic.BasicProgressBarUI
 import kotlin.math.roundToInt
 
 class QuestsPanel(project: Project) {
@@ -137,37 +139,16 @@ class QuestsPanel(project: Project) {
             objectivePanel.add(objectiveLabel, BorderLayout.WEST)
 
             if (!objective.isCompleted) {
-                val progressBar = JProgressBar(0, 100).apply {
-                    value = (objective.progress * 100).roundToInt()
-                    isStringPainted = true
-                    string = "${(objective.progress * 100).roundToInt()}%"
-                    preferredSize = java.awt.Dimension(100, 20)
-
-                    // Set color based on progress - visible in both light and dark themes
-                    foreground = when {
-                        objective.progress >= 0.75 -> JBColor.GREEN
-                        objective.progress >= 0.5 -> JBColor(0x4A9EFF, 0x4A9EFF) // Bright blue
-                        objective.progress >= 0.25 -> JBColor.ORANGE
-                        else -> JBColor(0x9370DB, 0xB19CD9) // Purple - visible in both themes
-                    }
-                }
+                val progressBar = createVisibleProgressBar(objective.progress, 100)
                 objectivePanel.add(progressBar, BorderLayout.EAST)
             }
 
             contentPanel.add(objectivePanel)
         }
 
-        val globalProgress = JProgressBar(0, 100).apply {
-            value = (quest.progress * 100).roundToInt()
-            isStringPainted = true
+        val globalProgress = createVisibleProgressBar(quest.progress, 0).apply {
             string = "Progress: ${(quest.progress * 100).roundToInt()}%"
             border = JBUI.Borders.emptyTop(5)
-
-            foreground = when {
-                quest.progress >= 1.0 -> JBColor.GREEN
-                quest.progress >= 0.5 -> JBColor.ORANGE
-                else -> JBColor.LIGHT_GRAY
-            }
         }
         contentPanel.add(globalProgress)
 
@@ -186,4 +167,42 @@ class QuestsPanel(project: Project) {
     }
 
     fun getContent(): JPanel = mainPanel
+
+    /**
+     * Creates a progress bar with visible text in both light and dark themes
+     */
+    private fun createVisibleProgressBar(progress: Double, minWidth: Int = 100): JProgressBar {
+        return JProgressBar(0, 100).apply {
+            value = (progress * 100).roundToInt()
+            isStringPainted = true
+            string = "${(progress * 100).roundToInt()}%"
+            if (minWidth > 0) {
+                preferredSize = java.awt.Dimension(minWidth, 20)
+            }
+
+            // Set bar color based on progress
+            val barColor = when {
+                progress >= 1.0 -> JBColor.GREEN
+                progress >= 0.75 -> JBColor(0x7CB342, 0x9CCC65) // Light green
+                progress >= 0.5 -> JBColor.ORANGE
+                progress >= 0.25 -> JBColor(0x4A9EFF, 0x4A9EFF) // Bright blue
+                else -> JBColor(0x9370DB, 0xB19CD9) // Purple
+            }
+
+            // Custom UI to ensure text is always visible with high contrast
+            setUI(object : BasicProgressBarUI() {
+                override fun getSelectionForeground(): Color {
+                    // Text color on filled portion - white for good contrast
+                    return Color.WHITE
+                }
+
+                override fun getSelectionBackground(): Color {
+                    // Text color on empty portion - use theme-aware color
+                    return JBColor.foreground()
+                }
+            })
+
+            foreground = barColor
+        }
+    }
 }

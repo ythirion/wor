@@ -18,6 +18,7 @@ import com.yot.wor.services.PlayerStateService
 import java.awt.*
 import java.awt.FlowLayout.LEFT
 import javax.swing.*
+import javax.swing.plaf.basic.BasicProgressBarUI
 import kotlin.math.roundToInt
 
 class WorToolWindow(private val project: Project) {
@@ -44,6 +45,24 @@ class WorToolWindow(private val project: Project) {
 
     private fun setupUI() {
         mainPanel.layout = BorderLayout()
+
+        // Configure progress bar with visible text
+        progressBar.apply {
+            isStringPainted = true
+
+            // Custom UI to ensure text is always visible with high contrast
+            setUI(object : BasicProgressBarUI() {
+                override fun getSelectionForeground(): Color {
+                    // Text color on filled portion - white for good contrast
+                    return Color.WHITE
+                }
+
+                override fun getSelectionBackground(): Color {
+                    // Text color on empty portion - use theme-aware color
+                    return JBColor.foreground()
+                }
+            })
+        }
 
         // Panel principal avec scroll
         val contentPanel = JBPanel<Nothing>().apply {
@@ -171,9 +190,7 @@ class WorToolWindow(private val project: Project) {
             border = JBUI.Borders.empty(5)
 
             add(xpLabel)
-            add(progressBar.apply {
-                isStringPainted = true
-            })
+            add(progressBar)
         }
     }
 
