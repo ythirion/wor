@@ -9,7 +9,7 @@ import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
 @Service(Service.Level.PROJECT)
-class QuestService(private val project: Project) {
+class QuestService(project: Project) {
 
     private val activeQuests = CopyOnWriteArrayList<Quest>()
     private val completedQuests = CopyOnWriteArrayList<Quest>()

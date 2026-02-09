@@ -7,7 +7,7 @@ import com.yot.wor.domain.RefactoringAction
 import java.util.concurrent.CopyOnWriteArrayList
 
 @Service(Service.Level.PROJECT)
-class RefactoringDetectionService(private val project: Project) {
+class RefactoringDetectionService() {
     private val detectedActions = CopyOnWriteArrayList<RefactoringAction>()
     private val listeners = CopyOnWriteArrayList<RefactoringActionListener>()
 

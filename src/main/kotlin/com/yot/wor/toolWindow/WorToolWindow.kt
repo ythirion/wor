@@ -15,11 +15,11 @@ import com.yot.wor.export.exportToJson
 import com.yot.wor.export.exportToMarkdown
 import com.yot.wor.services.PlayerStateService
 import java.awt.*
+import java.awt.FlowLayout.LEFT
 import javax.swing.*
 import kotlin.math.roundToInt
 
 class WorToolWindow(private val project: Project) {
-
     private val playerStateService = PlayerStateService.getInstance(project)
     private val mainPanel = JBPanel<Nothing>()
 
@@ -79,7 +79,7 @@ class WorToolWindow(private val project: Project) {
 
     private fun createExportPanel(): JPanel {
         return JBPanel<Nothing>().apply {
-            layout = FlowLayout(FlowLayout.LEFT)
+            layout = FlowLayout(LEFT)
             border = JBUI.Borders.empty(5)
 
             val exportButton = JButton("📤 Export Stats")
@@ -152,7 +152,7 @@ class WorToolWindow(private val project: Project) {
 
             // Icon + Title panel
             val iconTitlePanel = JBPanel<Nothing>().apply {
-                layout = java.awt.FlowLayout(java.awt.FlowLayout.LEFT)
+                layout = FlowLayout(LEFT)
             }
 
             titleLabel.font = Font(titleLabel.font.name, Font.BOLD, 18)
