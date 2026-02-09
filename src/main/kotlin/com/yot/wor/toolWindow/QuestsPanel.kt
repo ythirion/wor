@@ -192,12 +192,10 @@ class QuestsPanel(project: Project) {
             // Custom UI to ensure text is always visible with high contrast
             setUI(object : BasicProgressBarUI() {
                 override fun getSelectionForeground(): Color {
-                    // Text color on filled portion - white for good contrast
-                    return Color.WHITE
+                    return JBColor.WHITE
                 }
 
                 override fun getSelectionBackground(): Color {
-                    // Text color on empty portion - use theme-aware color
                     return JBColor.foreground()
                 }
             })

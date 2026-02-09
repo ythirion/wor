@@ -54,7 +54,7 @@ class WorToolWindow(private val project: Project) {
             setUI(object : BasicProgressBarUI() {
                 override fun getSelectionForeground(): Color {
                     // Text color on filled portion - white for good contrast
-                    return Color.WHITE
+                    return JBColor.WHITE
                 }
 
                 override fun getSelectionBackground(): Color {
