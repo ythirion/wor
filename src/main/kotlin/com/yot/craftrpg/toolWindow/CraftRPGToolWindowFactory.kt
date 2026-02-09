@@ -11,13 +11,25 @@ import com.intellij.ui.content.ContentFactory
 class CraftRPGToolWindowFactory : ToolWindowFactory {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        val craftRPGToolWindow = CraftRPGToolWindow(project)
-        val content = ContentFactory.getInstance().createContent(
-            craftRPGToolWindow.getContent(),
-            "Stats",
+        val contentFactory = ContentFactory.getInstance()
+
+        // Onglet Stats
+        val statsPanel = CraftRPGToolWindow(project)
+        val statsContent = contentFactory.createContent(
+            statsPanel.getContent(),
+            "📊 Stats",
             false
         )
-        toolWindow.contentManager.addContent(content)
+        toolWindow.contentManager.addContent(statsContent)
+
+        // Onglet Quêtes
+        val questsPanel = QuestsPanel(project)
+        val questsContent = contentFactory.createContent(
+            questsPanel.getContent(),
+            "📜 Quêtes",
+            false
+        )
+        toolWindow.contentManager.addContent(questsContent)
     }
 
     override fun shouldBeAvailable(project: Project) = true

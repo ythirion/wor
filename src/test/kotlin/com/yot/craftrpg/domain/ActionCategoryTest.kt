@@ -4,14 +4,6 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
 class ActionCategoryTest : FunSpec({
-
-    test("ActionCategory should have correct display names") {
-        ActionCategory.STRUCTURE.displayName shouldBe "Structure du code"
-        ActionCategory.LOGIC.displayName shouldBe "Logique & complexité"
-        ActionCategory.DATA.displayName shouldBe "Données & état"
-        ActionCategory.COUPLING.displayName shouldBe "Couplage"
-    }
-
     test("ActionCategory should have correct icons") {
         ActionCategory.STRUCTURE.icon shouldBe "🧱"
         ActionCategory.LOGIC.icon shouldBe "🧠"

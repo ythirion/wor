@@ -1,6 +1,8 @@
 package com.yot.craftrpg.domain
 
+import com.yot.craftrpg.icons.LevelIcons
 import java.time.Instant
+import javax.swing.Icon
 
 /**
  * État du joueur avec XP, niveau, statistiques
@@ -39,17 +41,41 @@ data class PlayerState(
         }
 
     /**
-     * Titre du joueur basé sur son niveau
+     * Player title based on level
      */
     val title: String
         get() = when {
-            level < 5 -> "🌱 Apprenti Refactorer"
-            level < 10 -> "⚔️ Refactorer"
-            level < 20 -> "🛡️ Refactorer Expert"
-            level < 30 -> "🎖️ Maître Refactorer"
-            level < 50 -> "👑 Grand Maître"
-            else -> "🧙 Légende Vivante"
+            level < 5 -> "Refactoring Apprentice"
+            level < 10 -> "Refactorer"
+            level < 20 -> "Expert Refactorer"
+            level < 30 -> "Refactoring Master"
+            level <= 50 -> "Grand Master"
+            else -> "Living Legend"
         }
+
+    /**
+     * Level icon (PNG) - returns null if not available
+     */
+    val levelIconImage: Icon?
+        get() = LevelIcons.getIconForLevel(level)
+
+    /**
+     * Level icon emoji fallback
+     */
+    val levelIconEmoji: String
+        get() = LevelIcons.getEmojiFallback(level)
+
+    /**
+     * Level icon for display (emoji if PNG not available)
+     */
+    val levelIcon: String
+        get() = if (levelIconImage != null) "" else levelIconEmoji
+
+    /**
+     * Level tier name (Apprentice, Refactorer, etc.)
+     */
+    val levelTier: String
+        get() = LevelIcons.getLevelTierName(level)
 
     companion object {
         /**

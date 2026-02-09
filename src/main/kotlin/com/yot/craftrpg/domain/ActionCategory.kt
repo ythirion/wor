@@ -1,11 +1,11 @@
 package com.yot.craftrpg.domain
 
 /**
- * Les 4 familles de refactorings du backlog
+ * The 4 refactoring families from the backlog
  */
 enum class ActionCategory(val displayName: String, val icon: String) {
-    STRUCTURE("Structure du code", "🧱"),
-    LOGIC("Logique & complexité", "🧠"),
-    DATA("Données & état", "📦"),
-    COUPLING("Couplage", "🔗")
+    STRUCTURE("Code Structure", "🧱"),
+    LOGIC("Logic & Complexity", "🧠"),
+    DATA("Data & State", "📦"),
+    COUPLING("Coupling", "🔗")
 }

@@ -78,28 +78,34 @@ class PlayerStateTest : FunSpec({
     context("Player titles") {
         test("low level should have apprentice title") {
             val state = PlayerState(level = 1)
-            state.title shouldBe "🌱 Apprenti Refactorer"
+            state.title shouldBe "Refactoring Apprentice"
+            state.levelIcon shouldBe "🌱"
         }
 
         test("mid level should have appropriate title") {
             val state1 = PlayerState(level = 5)
-            state1.title shouldBe "⚔️ Refactorer"
+            state1.title shouldBe "Refactorer"
+            state1.levelIcon shouldBe "⚔️"
 
             val state2 = PlayerState(level = 10)
-            state2.title shouldBe "🛡️ Refactorer Expert"
+            state2.title shouldBe "Expert Refactorer"
+            state2.levelIcon shouldBe "🛡️"
         }
 
         test("high level should have master title") {
             val state1 = PlayerState(level = 25)
-            state1.title shouldBe "🎖️ Maître Refactorer"
+            state1.title shouldBe "Refactoring Master"
+            state1.levelIcon shouldBe "🎖️"
 
             val state2 = PlayerState(level = 50)
-            state2.title shouldBe "\uD83E\uDDD9 Légende Vivante"
+            state2.title shouldBe "Grand Master"
+            state2.levelIcon shouldBe "👑"
         }
 
         test("very high level should have legend title") {
             val state = PlayerState(level = 100)
-            state.title shouldBe "🧙 Légende Vivante"
+            state.title shouldBe "Living Legend"
+            state.levelIcon shouldBe "🧙"
         }
     }
 
