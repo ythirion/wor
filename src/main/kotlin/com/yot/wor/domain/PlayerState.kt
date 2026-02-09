@@ -33,7 +33,6 @@ data class PlayerState(
 
     val levelIconImage: Icon? = LevelIcons.iconForLevel(level)
     val levelIconEmoji: String = LevelIcons.emojiFallback(level)
-    val levelIcon: String = levelIconEmoji
     val levelTier: String = LevelIcons.levelTierName(level)
 
     companion object {
