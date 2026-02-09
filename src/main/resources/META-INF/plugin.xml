@@ -14,11 +14,15 @@
                     anchor="right"
                     icon="com.yot.craftrpg.CraftRPGIcons.TOOL_WINDOW"/>
         <postStartupActivity implementation="com.yot.craftrpg.startup.MyProjectActivity" />
+        <notificationGroup id="Craft RPG Notifications"
+                          displayType="BALLOON"
+                          isLogByDefault="false"/>
     </extensions>
 
     <projectServices>
         <service serviceImplementation="com.yot.craftrpg.services.RefactoringDetectionService"/>
         <service serviceImplementation="com.yot.craftrpg.services.PlayerStateService"/>
+        <service serviceImplementation="com.yot.craftrpg.settings.CraftRPGSettings"/>
     </projectServices>
 
     <projectListeners>

@@ -83,6 +83,5 @@ data class CategoryStats(
     val totalXP: Int = 0,
     val mostUsedAction: RefactoringActionType? = null
 ) {
-    val averageXP: Double
-        get() = if (actionCount > 0) totalXP.toDouble() / actionCount else 0.0
+    val averageXP: Double = if (actionCount > 0) totalXP.toDouble() / actionCount else 0.0
 }

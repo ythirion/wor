@@ -7,6 +7,7 @@ import com.intellij.openapi.components.Storage
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
 import com.yot.craftrpg.domain.*
+import com.yot.craftrpg.notifications.CraftRPGNotifications
 import java.time.Instant
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -77,14 +78,20 @@ class PlayerStateService(
         )
 
         currentState.actionsHistory.add(persistedAction)
+        val oldTotalXP = currentState.totalXP
         currentState.totalXP += action.xpReward
 
-        val oldLevel = PlayerState.calculateLevel(currentState.totalXP - action.xpReward)
+        val oldLevel = PlayerState.calculateLevel(oldTotalXP)
         val newLevel = PlayerState.calculateLevel(currentState.totalXP)
 
+        // Notification de gain d'XP
+        CraftRPGNotifications.notifyXPGain(project, action)
+
+        // Notification de level up si applicable
         if (newLevel > oldLevel) {
-            thisLogger().info("🎉 Level up! ${oldLevel} → ${newLevel}")
-            // TODO: déclencher une notification de level up
+            val playerState = getPlayerState()
+            thisLogger().info("🎉 Level up! $oldLevel → $newLevel - ${playerState.title}")
+            CraftRPGNotifications.notifyLevelUp(project, oldLevel, newLevel, playerState.title)
         }
 
         notifyListeners()
