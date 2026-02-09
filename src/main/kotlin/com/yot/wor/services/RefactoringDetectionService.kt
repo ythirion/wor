@@ -8,7 +8,6 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 @Service(Service.Level.PROJECT)
 class RefactoringDetectionService(private val project: Project) {
-
     private val detectedActions = CopyOnWriteArrayList<RefactoringAction>()
     private val listeners = CopyOnWriteArrayList<RefactoringActionListener>()
 
@@ -30,9 +29,9 @@ class RefactoringDetectionService(private val project: Project) {
         listeners.remove(listener)
     }
 
-    fun getAllActions(): List<RefactoringAction> = detectedActions.toList()
-    fun getRecentActions(count: Int): List<RefactoringAction> = detectedActions.takeLast(count)
-    fun getTotalXP(): Int = detectedActions.sumOf { it.xpReward }
+    fun allActions(): List<RefactoringAction> = detectedActions.toList()
+    fun recentActions(count: Int): List<RefactoringAction> = detectedActions.takeLast(count)
+    fun totalXP(): Int = detectedActions.sumOf { it.xpReward }
     fun reset() = detectedActions.clear()
 
     private fun notifyListeners(action: RefactoringAction) {

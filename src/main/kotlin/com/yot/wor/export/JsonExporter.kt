@@ -41,9 +41,9 @@ private val json = Json { prettyPrint = true }
 
 fun exportToJson(project: Project, file: File): Boolean {
     return try {
-        val playerState = PlayerStateService.getInstance(project).getPlayerState()
-        val quests = QuestService.getInstance(project).getActiveQuests()
-        val completedQuests = QuestService.getInstance(project).getCompletedQuests()
+        val playerState = PlayerStateService.getInstance(project).playerState()
+        val quests = QuestService.getInstance(project).activeQuests()
+        val completedQuests = QuestService.getInstance(project).completedQuests()
 
         val export = buildStatsExport(playerState, quests, completedQuests)
         val jsonString = json.encodeToString(export)

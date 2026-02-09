@@ -4,7 +4,6 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
 class QuestTest : FunSpec({
-
     context("QuestObjective") {
         test("should be completed when count reaches target") {
             val objective = QuestObjective("Do something", targetCount = 5, currentCount = 5)

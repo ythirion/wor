@@ -10,11 +10,7 @@ import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 
-/**
- * Tests pour PlayerStateService
- */
 class PlayerStateServiceTest : BasePlatformTestCase() {
-
     private lateinit var service: PlayerStateService
 
     override fun setUp() {
@@ -32,7 +28,7 @@ class PlayerStateServiceTest : BasePlatformTestCase() {
     }
 
     fun `test new player should start with default state`() {
-        val state = service.getPlayerState()
+        val state = service.playerState()
 
         state.level shouldBe 1
         state.totalXP shouldBe 0
@@ -44,7 +40,7 @@ class PlayerStateServiceTest : BasePlatformTestCase() {
 
         service.addRefactoringAction(action)
 
-        val state = service.getPlayerState()
+        val state = service.playerState()
         state.totalXP shouldBe 10
         state.actionsHistory shouldHaveSize 1
     }
@@ -54,18 +50,17 @@ class PlayerStateServiceTest : BasePlatformTestCase() {
         service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.RENAME)) // 5 XP
         service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.EXTRACT_CLASS)) // 15 XP
 
-        val state = service.getPlayerState()
+        val state = service.playerState()
         state.totalXP shouldBe 30
         state.actionsHistory shouldHaveSize 3
     }
 
     fun `test should level up when reaching XP threshold`() {
-        // Ajouter suffisamment d'actions pour atteindre le niveau 2
         repeat(15) {
             service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.EXTRACT_CLASS)) // 15 XP each
         }
 
-        val state = service.getPlayerState()
+        val state = service.playerState()
         state.totalXP shouldBeGreaterThan 200
         state.level shouldBeGreaterThan 1
     }
@@ -119,7 +114,7 @@ class PlayerStateServiceTest : BasePlatformTestCase() {
         service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.RENAME))
         service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.SIMPLIFY_BOOLEAN))
 
-        val state = service.getPlayerState()
+        val state = service.playerState()
         val structureStats = state.statisticsByCategory[ActionCategory.STRUCTURE]
         val logicStats = state.statisticsByCategory[ActionCategory.LOGIC]
 
@@ -138,7 +133,7 @@ class PlayerStateServiceTest : BasePlatformTestCase() {
             service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.EXTRACT_METHOD))
         }
 
-        val state = service.getPlayerState()
+        val state = service.playerState()
         val structureStats = state.statisticsByCategory[ActionCategory.STRUCTURE]
 
         structureStats?.mostUsedAction shouldBe RefactoringActionType.RENAME
@@ -146,12 +141,12 @@ class PlayerStateServiceTest : BasePlatformTestCase() {
 
     fun `test should track last action timestamp`() {
         service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.RENAME))
-        val state1 = service.getPlayerState()
+        val state1 = service.playerState()
 
         Thread.sleep(10) // Petit délai pour différencier les timestamps
 
         service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.EXTRACT_METHOD))
-        val state2 = service.getPlayerState()
+        val state2 = service.playerState()
 
         state1.lastActionTimestamp shouldNotBe null
         state2.lastActionTimestamp shouldNotBe null
@@ -162,11 +157,11 @@ class PlayerStateServiceTest : BasePlatformTestCase() {
         service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.EXTRACT_METHOD))
         service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.RENAME))
 
-        service.getPlayerState().totalXP shouldBeGreaterThan 0
+        service.playerState().totalXP shouldBeGreaterThan 0
 
         service.reset()
 
-        val state = service.getPlayerState()
+        val state = service.playerState()
         state.totalXP shouldBe 0
         state.level shouldBe 1
         state.actionsHistory.shouldBeEmpty()
@@ -177,7 +172,7 @@ class PlayerStateServiceTest : BasePlatformTestCase() {
             service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.RENAME))
         }
 
-        val state = service.getPlayerState()
+        val state = service.playerState()
         state.actionsHistory shouldHaveSize 50
         state.totalXP shouldBe 250 // 50 * 5
     }
@@ -193,7 +188,7 @@ class PlayerStateServiceTest : BasePlatformTestCase() {
         service.addRefactoringAction(action2)
         service.addRefactoringAction(action3)
 
-        val state = service.getPlayerState()
+        val state = service.playerState()
         val history = state.actionsHistory
 
         history shouldHaveSize 3

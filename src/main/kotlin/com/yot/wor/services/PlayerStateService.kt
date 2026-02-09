@@ -23,17 +23,11 @@ class PlayerStateService(
     private val listeners = CopyOnWriteArrayList<PlayerStateListener>()
     private var currentState = State()
 
-    /**
-     * État persisté
-     */
     data class State(
         var totalXP: Int = 0,
         var actionsHistory: MutableList<PersistedAction> = mutableListOf()
     )
 
-    /**
-     * Action persistée (version simplifiée pour la sérialisation)
-     */
     data class PersistedAction(
         var actionTypeId: String = "",
         var timestamp: Long = 0,
@@ -41,15 +35,11 @@ class PlayerStateService(
         var elementName: String? = null
     )
 
-    /**
-     * Interface pour écouter les changements d'état
-     */
     fun interface PlayerStateListener {
         fun onStateChanged(state: PlayerState)
     }
 
     init {
-        // S'abonner aux actions de refactoring
         RefactoringDetectionService.getInstance(project).addListener { action ->
             addRefactoringAction(action)
         }
@@ -62,9 +52,6 @@ class PlayerStateService(
         thisLogger().info("Player state loaded: ${state.totalXP} XP, ${state.actionsHistory.size} actions")
     }
 
-    /**
-     * Ajoute une action de refactoring et met à jour l'XP
-     */
     fun addRefactoringAction(action: RefactoringAction) {
         val persistedAction = PersistedAction(
             actionTypeId = action.type.name,
@@ -80,12 +67,10 @@ class PlayerStateService(
         val oldLevel = PlayerState.calculateLevel(oldTotalXP)
         val newLevel = PlayerState.calculateLevel(currentState.totalXP)
 
-        // Notification de gain d'XP
         WorNotifications.notifyXPGain(project, action)
 
-        // Notification de level up si applicable
         if (newLevel > oldLevel) {
-            val playerState = getPlayerState()
+            val playerState = playerState()
             thisLogger().info("🎉 Level up! $oldLevel → $newLevel - ${playerState.title}")
             WorNotifications.notifyLevelUp(project, oldLevel, newLevel, playerState.title)
         }
@@ -93,10 +78,7 @@ class PlayerStateService(
         notifyListeners()
     }
 
-    /**
-     * Récupère l'état actuel du joueur
-     */
-    fun getPlayerState(): PlayerState {
+    fun playerState(): PlayerState {
         val actions = currentState.actionsHistory.mapNotNull { persisted ->
             try {
                 val type = RefactoringActionType.valueOf(persisted.actionTypeId)
@@ -106,7 +88,7 @@ class PlayerStateService(
                     fileName = persisted.fileName,
                     elementName = persisted.elementName
                 )
-            } catch (e: IllegalArgumentException) {
+            } catch (_: IllegalArgumentException) {
                 thisLogger().warn("Unknown action type: ${persisted.actionTypeId}")
                 null
             }
@@ -125,9 +107,6 @@ class PlayerStateService(
         )
     }
 
-    /**
-     * Calcule les statistiques par catégorie
-     */
     private fun calculateCategoryStats(actions: List<RefactoringAction>): Map<ActionCategory, CategoryStats> {
         return ActionCategory.entries.associateWith { category ->
             val categoryActions = actions.filter { it.category == category }
@@ -143,23 +122,14 @@ class PlayerStateService(
         }
     }
 
-    /**
-     * Ajoute un listener
-     */
     fun addListener(listener: PlayerStateListener) {
         listeners.add(listener)
     }
 
-    /**
-     * Retire un listener
-     */
     fun removeListener(listener: PlayerStateListener) {
         listeners.remove(listener)
     }
 
-    /**
-     * Réinitialise l'état (pour les tests ou debug)
-     */
     fun reset() {
         currentState.totalXP = 0
         currentState.actionsHistory.clear()
@@ -167,7 +137,7 @@ class PlayerStateService(
     }
 
     private fun notifyListeners() {
-        val state = getPlayerState()
+        val state = playerState()
         listeners.forEach { listener ->
             try {
                 listener.onStateChanged(state)

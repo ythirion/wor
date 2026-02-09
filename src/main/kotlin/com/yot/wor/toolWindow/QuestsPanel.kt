@@ -52,8 +52,8 @@ class QuestsPanel(project: Project) {
     }
 
     private fun updateUI() {
-        val activeQuests = questService.getActiveQuests()
-        val completedQuests = questService.getCompletedQuests()
+        val activeQuests = questService.activeQuests()
+        val completedQuests = questService.completedQuests()
 
         statsLabel.text = "📜 ${activeQuests.size} active quests | ✅ ${completedQuests.size} completed"
         questsListPanel.removeAll()

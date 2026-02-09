@@ -13,9 +13,9 @@ import java.time.format.DateTimeFormatter
 
 fun exportToMarkdown(project: Project, file: File): Boolean {
     return try {
-        val playerState = PlayerStateService.getInstance(project).getPlayerState()
-        val quests = QuestService.getInstance(project).getActiveQuests()
-        val completedQuests = QuestService.getInstance(project).getCompletedQuests()
+        val playerState = PlayerStateService.getInstance(project).playerState()
+        val quests = QuestService.getInstance(project).activeQuests()
+        val completedQuests = QuestService.getInstance(project).completedQuests()
 
         val markdown = buildMarkdownString(playerState, quests, completedQuests)
         file.writeText(markdown)
@@ -97,23 +97,19 @@ private fun buildMarkdownString(
 }
 
 private fun copyLevelIconToExportDir(exportDir: File, level: Int) {
-    try {
-        val icon = LevelIcons.iconForLevel(level)
-        if (icon != null) {
-            val iconPath = LevelIcons.iconPathForLevel(level)
-            val iconFileName = iconPath.substringAfterLast('/')
+    val icon = LevelIcons.iconForLevel(level)
+    if (icon != null) {
+        val iconPath = LevelIcons.iconPathForLevel(level)
+        val iconFileName = iconPath.substringAfterLast('/')
 
-            // Try to read the icon from resources
-            val resourceStream = LevelIcons::class.java.getResourceAsStream("/$iconPath")
-            if (resourceStream != null) {
-                val targetFile = File(exportDir, iconFileName)
-                resourceStream.use { input ->
-                    targetFile.outputStream().use { output ->
-                        input.copyTo(output)
-                    }
+        val resourceStream = LevelIcons::class.java.getResourceAsStream("/$iconPath")
+        if (resourceStream != null) {
+            val targetFile = File(exportDir, iconFileName)
+            resourceStream.use { input ->
+                targetFile.outputStream().use { output ->
+                    input.copyTo(output)
                 }
             }
         }
-    } catch (_: Exception) {
     }
 }

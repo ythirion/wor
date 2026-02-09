@@ -10,12 +10,7 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 
-/**
- * Tests pour RefactoringDetectionService
- * Utilise BasePlatformTestCase pour avoir un projet IntelliJ mocké
- */
 class RefactoringDetectionServiceTest : BasePlatformTestCase() {
-
     private lateinit var service: RefactoringDetectionService
 
     override fun setUp() {
@@ -33,8 +28,8 @@ class RefactoringDetectionServiceTest : BasePlatformTestCase() {
     }
 
     fun `test service should start with no actions`() {
-        service.getAllActions().shouldBeEmpty()
-        service.getTotalXP() shouldBe 0
+        service.allActions().shouldBeEmpty()
+        service.totalXP() shouldBe 0
     }
 
     fun `test onRefactoringDetected should add action`() {
@@ -45,8 +40,8 @@ class RefactoringDetectionServiceTest : BasePlatformTestCase() {
 
         service.onRefactoringDetected(action)
 
-        service.getAllActions() shouldHaveSize 1
-        service.getAllActions().first() shouldBe action
+        service.allActions() shouldHaveSize 1
+        service.allActions().first() shouldBe action
     }
 
     fun `test should calculate total XP correctly`() {
@@ -54,7 +49,7 @@ class RefactoringDetectionServiceTest : BasePlatformTestCase() {
         service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.RENAME)) // 5 XP
         service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.EXTRACT_CLASS)) // 15 XP
 
-        service.getTotalXP() shouldBe 30
+        service.totalXP() shouldBe 30
     }
 
     fun `test getRecentActions should return last N actions`() {
@@ -67,7 +62,7 @@ class RefactoringDetectionServiceTest : BasePlatformTestCase() {
             )
         }
 
-        val recent = service.getRecentActions(3)
+        val recent = service.recentActions(3)
         recent shouldHaveSize 3
         recent[0].fileName shouldBe "File7.kt"
         recent[1].fileName shouldBe "File8.kt"
@@ -122,13 +117,13 @@ class RefactoringDetectionServiceTest : BasePlatformTestCase() {
         service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.EXTRACT_METHOD))
         service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.RENAME))
 
-        service.getAllActions() shouldHaveSize 2
-        service.getTotalXP() shouldBeGreaterThan 0
+        service.allActions() shouldHaveSize 2
+        service.totalXP() shouldBeGreaterThan 0
 
         service.reset()
 
-        service.getAllActions().shouldBeEmpty()
-        service.getTotalXP() shouldBe 0
+        service.allActions().shouldBeEmpty()
+        service.totalXP() shouldBe 0
     }
 
     fun `test should track multiple action types`() {
@@ -136,7 +131,7 @@ class RefactoringDetectionServiceTest : BasePlatformTestCase() {
         service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.RENAME))
         service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.SIMPLIFY_BOOLEAN))
 
-        val actions = service.getAllActions()
+        val actions = service.allActions()
         actions shouldHaveSize 3
 
         val categories = actions.map { it.category }.toSet()
@@ -149,8 +144,8 @@ class RefactoringDetectionServiceTest : BasePlatformTestCase() {
             service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.RENAME))
         }
 
-        service.getAllActions() shouldHaveSize 100
-        service.getTotalXP() shouldBe 500 // 100 * 5 XP
+        service.allActions() shouldHaveSize 100
+        service.totalXP() shouldBe 500 // 100 * 5 XP
     }
 
     fun `test getInstance should return same instance`() {

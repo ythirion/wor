@@ -15,6 +15,7 @@ data class Quest(
     val completedAt: Instant? = null
 ) {
     val isCompleted: Boolean = objectives.all { it.isCompleted }
+    val isAvailable: Boolean = status == QuestStatus.AVAILABLE || status == QuestStatus.IN_PROGRESS
     val progress: Double
         get() {
             if (objectives.isEmpty()) return 0.0
@@ -48,7 +49,7 @@ enum class QuestDifficulty(val displayName: String, val icon: String, val xpMult
 }
 
 enum class QuestStatus {
-    AVAILABLE,      // Available
-    IN_PROGRESS,    // In progress
-    COMPLETED       // Completed
+    AVAILABLE,
+    IN_PROGRESS,
+    COMPLETED
 }

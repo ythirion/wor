@@ -21,13 +21,13 @@ class QuestService(private val project: Project) {
 
     init {
         generateStarterQuests()
+
         RefactoringDetectionService
             .getInstance(project)
             .addListener { action -> updateQuestProgress(action) }
     }
 
     private fun generateStarterQuests() {
-        // Daily quest: Do 5 refactorings
         addQuest(
             Quest(
                 id = UUID.randomUUID().toString(),
@@ -108,46 +108,43 @@ class QuestService(private val project: Project) {
     private fun updateQuestProgress(action: RefactoringAction) {
         var questsUpdated = false
 
-        for (quest in activeQuests) {
-            if (quest.status != QuestStatus.AVAILABLE && quest.status != QuestStatus.IN_PROGRESS) {
-                continue
-            }
-
-            val updatedObjectives = quest.objectives.map { objective ->
-                if (shouldUpdateObjective(objective, action)) {
-                    objective.copy(currentCount = objective.currentCount + 1)
-                } else {
-                    objective
+        activeQuests
+            .filter { quest -> quest.isAvailable }
+            .forEach { quest ->
+                val updatedObjectives = quest.objectives.map { objective ->
+                    if (shouldUpdateObjective(
+                            objective,
+                            action
+                        )
+                    ) objective.copy(currentCount = objective.currentCount + 1) else objective
                 }
-            }
 
-            val updatedQuest = quest.copy(
-                objectives = updatedObjectives,
-                status = if (updatedObjectives.all { it.isCompleted }) QuestStatus.IN_PROGRESS else quest.status
-            )
+                val updatedQuest = quest.copy(
+                    objectives = updatedObjectives,
+                    status = if (updatedObjectives.all { it.isCompleted }) QuestStatus.IN_PROGRESS else quest.status
+                )
 
-            if (updatedQuest.isCompleted && quest.status != QuestStatus.COMPLETED) {
-                completeQuest(updatedQuest)
-                questsUpdated = true
-            } else if (updatedQuest != quest) {
-                val index = activeQuests.indexOf(quest)
-                if (index >= 0) {
-                    activeQuests[index] = updatedQuest
+                if (updatedQuest.isCompleted) {
+                    completeQuest(updatedQuest)
                     questsUpdated = true
+                } else if (updatedQuest != quest) {
+                    val index = activeQuests.indexOf(quest)
+
+                    if (index >= 0) {
+                        activeQuests[index] = updatedQuest
+                        questsUpdated = true
+                    }
                 }
             }
-        }
 
-        if (questsUpdated) {
-            notifyListeners()
-        }
+        if (questsUpdated) notifyListeners()
     }
 
     private fun shouldUpdateObjective(objective: QuestObjective, action: RefactoringAction): Boolean {
         return when {
             objective.description.contains("refactoring", ignoreCase = true) -> true
             objective.description.contains(
-                "Renommer",
+                "Rename",
                 ignoreCase = true
             ) && action.type == RefactoringActionType.RENAME -> true
 
@@ -190,14 +187,6 @@ class QuestService(private val project: Project) {
         completedQuests.add(completedQuest)
 
         val questXP = (quest.xpReward * quest.difficulty.xpMultiplier).toInt()
-
-        // Créer une action fictive pour l'XP de la quête
-        val questAction = RefactoringAction(
-            type = RefactoringActionType.RENAME, // Type fictif
-            fileName = "Quest Completed"
-        )
-
-        // TODO: Créer un système d'XP bonus séparé pour les quêtes
         thisLogger().info("Quest completed: ${quest.title} (+$questXP XP)")
     }
 
@@ -206,10 +195,10 @@ class QuestService(private val project: Project) {
         notifyListeners()
     }
 
-    fun getActiveQuests(): List<Quest> = activeQuests.toList()
-    fun getCompletedQuests(): List<Quest> = completedQuests.toList()
-    fun getQuestsByCategory(category: QuestCategory): List<Quest> = activeQuests.filter { it.category == category }
-    fun getQuestsByDifficulty(difficulty: QuestDifficulty): List<Quest> =
+    fun activeQuests(): List<Quest> = activeQuests.toList()
+    fun completedQuests(): List<Quest> = completedQuests.toList()
+    fun questsByCategory(category: QuestCategory): List<Quest> = activeQuests.filter { it.category == category }
+    fun questsByDifficulty(difficulty: QuestDifficulty): List<Quest> =
         activeQuests.filter { it.difficulty == difficulty }
 
     fun addListener(listener: QuestListener) {

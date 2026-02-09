@@ -6,7 +6,7 @@ import java.io.File
 
 fun exportToCsv(project: Project, file: File): Boolean {
     return try {
-        val playerState = PlayerStateService.getInstance(project).getPlayerState()
+        val playerState = PlayerStateService.getInstance(project).playerState()
 
         val csv = buildString {
             // Header

@@ -45,6 +45,5 @@ class RefactoringEventListenerImpl(private val project: Project) : RefactoringEv
 
     override fun undoRefactoring(refactoringId: String) {
         thisLogger().info("Refactoring undone: $refactoringId")
-        // TODO: gérer l'annulation (retirer l'XP ?)
     }
 }

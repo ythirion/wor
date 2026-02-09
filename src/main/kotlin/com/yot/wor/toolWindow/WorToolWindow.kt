@@ -14,11 +14,7 @@ import com.yot.wor.export.exportToCsv
 import com.yot.wor.export.exportToJson
 import com.yot.wor.export.exportToMarkdown
 import com.yot.wor.services.PlayerStateService
-import java.awt.BorderLayout
-import java.awt.FlowLayout
-import java.awt.Font
-import java.awt.GridBagConstraints
-import java.awt.GridBagLayout
+import java.awt.*
 import javax.swing.*
 import kotlin.math.roundToInt
 
@@ -38,7 +34,7 @@ class WorToolWindow(private val project: Project) {
 
     init {
         setupUI()
-        updateUI(playerStateService.getPlayerState())
+        updateUI(playerStateService.playerState())
 
         playerStateService.addListener { state ->
             updateUI(state)
@@ -284,8 +280,7 @@ class WorToolWindow(private val project: Project) {
 
         if (recentActions.isEmpty()) {
             recentActionsPanel.add(JBLabel("No actions yet. Start refactoring! 🚀"))
-        }
-        else {
+        } else {
             recentActions.forEach { action ->
                 val text = buildString {
                     append("${action.type.gameplayTag} ")

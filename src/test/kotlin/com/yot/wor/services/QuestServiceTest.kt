@@ -1,14 +1,16 @@
 package com.yot.wor.services
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.yot.wor.domain.*
+import com.yot.wor.domain.Quest
+import com.yot.wor.domain.QuestCategory
+import com.yot.wor.domain.QuestDifficulty
+import com.yot.wor.domain.QuestObjective
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
 
 class QuestServiceTest : BasePlatformTestCase() {
-
     private lateinit var service: QuestService
 
     override fun setUp() {
@@ -17,13 +19,12 @@ class QuestServiceTest : BasePlatformTestCase() {
     }
 
     fun `test should have starter quests`() {
-        val quests = service.getActiveQuests()
-
+        val quests = service.activeQuests()
         quests.size shouldBeGreaterThan 0
     }
 
     fun `test should add new quest`() {
-        val initialCount = service.getActiveQuests().size
+        val initialCount = service.activeQuests().size
 
         val quest = Quest(
             id = "test-quest",
@@ -39,8 +40,8 @@ class QuestServiceTest : BasePlatformTestCase() {
 
         service.addQuest(quest)
 
-        service.getActiveQuests() shouldHaveSize (initialCount + 1)
-        service.getActiveQuests() shouldContain quest
+        service.activeQuests() shouldHaveSize (initialCount + 1)
+        service.activeQuests() shouldContain quest
     }
 
     fun `test should filter quests by category`() {
@@ -56,7 +57,7 @@ class QuestServiceTest : BasePlatformTestCase() {
 
         service.addQuest(quest)
 
-        val cleanupQuests = service.getQuestsByCategory(QuestCategory.CLEANUP)
+        val cleanupQuests = service.questsByCategory(QuestCategory.CLEANUP)
         cleanupQuests shouldContain quest
     }
 
@@ -73,7 +74,7 @@ class QuestServiceTest : BasePlatformTestCase() {
 
         service.addQuest(quest)
 
-        val hardQuests = service.getQuestsByDifficulty(QuestDifficulty.HARD)
+        val hardQuests = service.questsByDifficulty(QuestDifficulty.HARD)
         hardQuests shouldContain quest
     }
 

@@ -77,6 +77,83 @@ Once installed, the plugin automatically tracks your refactoring actions:
 5. **Complete Quests**: Track your progress in the Quests tab
 6. **Export Your Data**: Use the export button to save your achievements
 
+## Architecture
+
+### Event Flow
+
+The plugin automatically detects and rewards refactoring actions through a sophisticated event-driven architecture:
+
+```mermaid
+sequenceDiagram
+    participant IDE as IntelliJ IDEA
+    participant Listener as RefactoringEventListenerImpl
+    participant Detection as RefactoringDetectionService
+    participant Player as PlayerStateService
+    participant Quest as QuestService
+    participant Notif as WorNotifications
+    participant UI as Tool Window
+
+    IDE->>Listener: refactoringDone(event)
+    activate Listener
+
+    Listener->>Detection: Identify refactoring type
+    activate Detection
+
+    Detection->>Detection: Map IDE action to RefactoringActionType
+    Detection->>Detection: Calculate XP reward
+
+    Detection->>Player: Publish RefactoringAction event
+    deactivate Detection
+    deactivate Listener
+
+    activate Player
+    Player->>Player: Add XP
+    Player->>Player: Update action history
+    Player->>Player: Update category stats
+
+    alt Level Up
+        Player->>Player: Calculate new level
+        Player->>Notif: Show level up notification
+        activate Notif
+        Notif->>IDE: Display balloon notification
+        deactivate Notif
+    else XP Gain
+        Player->>Notif: Show XP gain notification
+        activate Notif
+        Notif->>IDE: Display balloon notification
+        deactivate Notif
+    end
+
+    Player->>Quest: Update quest progress
+    deactivate Player
+
+    activate Quest
+    Quest->>Quest: Check quest objectives
+
+    alt Quest Completed
+        Quest->>Player: Award bonus XP
+        Quest->>Notif: Show quest completion
+        activate Notif
+        Notif->>IDE: Display balloon notification
+        deactivate Notif
+    end
+    deactivate Quest
+
+    Player->>UI: State changed
+    activate UI
+    UI->>UI: Refresh statistics display
+    deactivate UI
+```
+
+### Key Components
+
+- **RefactoringEventListenerImpl**: Listens to IntelliJ's refactoring events
+- **RefactoringDetectionService**: Maps IDE events to game actions and calculates rewards
+- **PlayerStateService**: Manages player progression, XP, and statistics (persisted)
+- **QuestService**: Tracks and validates quest completion (persisted)
+- **WorNotifications**: Displays balloon notifications for XP gains and achievements
+- **Tool Window**: Real-time UI displaying stats, quests, and player progression
+
 ## XP Rewards
 
 Different refactoring actions provide different XP amounts based on their complexity:
