@@ -7,7 +7,6 @@ import com.yot.wor.domain.RefactoringAction
 import com.yot.wor.settings.WoRSettings
 
 object WorNotifications {
-
     private const val NOTIFICATION_GROUP_ID = "WoR Notifications"
 
     fun notifyXPGain(project: Project, action: RefactoringAction) {

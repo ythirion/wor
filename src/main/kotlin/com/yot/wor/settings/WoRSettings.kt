@@ -12,7 +12,6 @@ import com.intellij.openapi.project.Project
     storages = [Storage("wor-settings.xml")]
 )
 class WoRSettings : PersistentStateComponent<WoRSettings.State> {
-
     private var myState = State()
 
     data class State(
@@ -24,7 +23,6 @@ class WoRSettings : PersistentStateComponent<WoRSettings.State> {
     )
 
     override fun getState(): State = myState
-
     override fun loadState(state: State) {
         myState = state
     }

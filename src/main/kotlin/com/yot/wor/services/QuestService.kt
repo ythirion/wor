@@ -5,12 +5,9 @@ import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
 import com.yot.wor.domain.*
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 
-/**
- * Service pour gérer les quêtes
- */
 @Service(Service.Level.PROJECT)
 class QuestService(private val project: Project) {
 
@@ -18,26 +15,17 @@ class QuestService(private val project: Project) {
     private val completedQuests = CopyOnWriteArrayList<Quest>()
     private val listeners = CopyOnWriteArrayList<QuestListener>()
 
-    /**
-     * Interface pour écouter les changements de quêtes
-     */
     fun interface QuestListener {
         fun onQuestsChanged()
     }
 
     init {
-        // Générer des quêtes de démarrage
         generateStarterQuests()
-
-        // S'abonner aux actions de refactoring pour mettre à jour les quêtes
-        RefactoringDetectionService.getInstance(project).addListener { action ->
-            updateQuestProgress(action)
-        }
+        RefactoringDetectionService
+            .getInstance(project)
+            .addListener { action -> updateQuestProgress(action) }
     }
 
-    /**
-     * Generates starter quests
-     */
     private fun generateStarterQuests() {
         // Daily quest: Do 5 refactorings
         addQuest(
@@ -117,9 +105,6 @@ class QuestService(private val project: Project) {
         )
     }
 
-    /**
-     * Met à jour la progression des quêtes en fonction d'une action
-     */
     private fun updateQuestProgress(action: RefactoringAction) {
         var questsUpdated = false
 
@@ -158,25 +143,43 @@ class QuestService(private val project: Project) {
         }
     }
 
-    /**
-     * Vérifie si un objectif doit être mis à jour pour une action donnée
-     */
     private fun shouldUpdateObjective(objective: QuestObjective, action: RefactoringAction): Boolean {
         return when {
             objective.description.contains("refactoring", ignoreCase = true) -> true
-            objective.description.contains("Renommer", ignoreCase = true) && action.type == RefactoringActionType.RENAME -> true
-            objective.description.contains("Extract Method", ignoreCase = true) && action.type == RefactoringActionType.EXTRACT_METHOD -> true
-            objective.description.contains("Extract Class", ignoreCase = true) && action.type == RefactoringActionType.EXTRACT_CLASS -> true
-            objective.description.contains("Move Method", ignoreCase = true) && action.type == RefactoringActionType.MOVE_METHOD -> true
-            objective.description.contains("Optimize Imports", ignoreCase = true) && action.type == RefactoringActionType.OPTIMIZE_IMPORTS -> true
-            objective.description.contains("Reformat", ignoreCase = true) && action.type == RefactoringActionType.REFORMAT_CODE -> true
+            objective.description.contains(
+                "Renommer",
+                ignoreCase = true
+            ) && action.type == RefactoringActionType.RENAME -> true
+
+            objective.description.contains(
+                "Extract Method",
+                ignoreCase = true
+            ) && action.type == RefactoringActionType.EXTRACT_METHOD -> true
+
+            objective.description.contains(
+                "Extract Class",
+                ignoreCase = true
+            ) && action.type == RefactoringActionType.EXTRACT_CLASS -> true
+
+            objective.description.contains(
+                "Move Method",
+                ignoreCase = true
+            ) && action.type == RefactoringActionType.MOVE_METHOD -> true
+
+            objective.description.contains(
+                "Optimize Imports",
+                ignoreCase = true
+            ) && action.type == RefactoringActionType.OPTIMIZE_IMPORTS -> true
+
+            objective.description.contains(
+                "Reformat",
+                ignoreCase = true
+            ) && action.type == RefactoringActionType.REFORMAT_CODE -> true
+
             else -> false
         }
     }
 
-    /**
-     * Complète une quête et donne l'XP au joueur
-     */
     private fun completeQuest(quest: Quest) {
         val completedQuest = quest.copy(
             status = QuestStatus.COMPLETED,
@@ -186,8 +189,6 @@ class QuestService(private val project: Project) {
         activeQuests.remove(quest)
         completedQuests.add(completedQuest)
 
-        // Donner l'XP au joueur
-        val playerStateService = PlayerStateService.getInstance(project)
         val questXP = (quest.xpReward * quest.difficulty.xpMultiplier).toInt()
 
         // Créer une action fictive pour l'XP de la quête
@@ -200,44 +201,19 @@ class QuestService(private val project: Project) {
         thisLogger().info("Quest completed: ${quest.title} (+$questXP XP)")
     }
 
-    /**
-     * Ajoute une nouvelle quête
-     */
     fun addQuest(quest: Quest) {
         activeQuests.add(quest)
         notifyListeners()
     }
 
-    /**
-     * Récupère toutes les quêtes actives
-     */
     fun getActiveQuests(): List<Quest> = activeQuests.toList()
-
-    /**
-     * Récupère les quêtes complétées
-     */
     fun getCompletedQuests(): List<Quest> = completedQuests.toList()
-
-    /**
-     * Récupère les quêtes par catégorie
-     */
-    fun getQuestsByCategory(category: QuestCategory): List<Quest> {
-        return activeQuests.filter { it.category == category }
-    }
-
-    /**
-     * Récupère les quêtes par difficulté
-     */
-    fun getQuestsByDifficulty(difficulty: QuestDifficulty): List<Quest> {
-        return activeQuests.filter { it.difficulty == difficulty }
-    }
+    fun getQuestsByCategory(category: QuestCategory): List<Quest> = activeQuests.filter { it.category == category }
+    fun getQuestsByDifficulty(difficulty: QuestDifficulty): List<Quest> =
+        activeQuests.filter { it.difficulty == difficulty }
 
     fun addListener(listener: QuestListener) {
         listeners.add(listener)
-    }
-
-    fun removeListener(listener: QuestListener) {
-        listeners.remove(listener)
     }
 
     private fun notifyListeners() {

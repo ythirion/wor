@@ -1,9 +1,5 @@
 package com.yot.wor.domain
 
-/**
- * Types d'actions de refactoring détectables dans l'IDE
- * Basé sur le backlog - Section 1 & 3
- */
 enum class RefactoringActionType(
     val displayName: String,
     val category: ActionCategory,
@@ -26,7 +22,12 @@ enum class RefactoringActionType(
     PUSH_DOWN("Push Down", ActionCategory.STRUCTURE, 12, "🏗️ Architecture"),
 
     // B — Logique & complexité
-    REPLACE_CONDITIONAL_WITH_POLYMORPHISM("Replace Conditional with Polymorphism", ActionCategory.LOGIC, 20, "🐍 Hydra Slayer"),
+    REPLACE_CONDITIONAL_WITH_POLYMORPHISM(
+        "Replace Conditional with Polymorphism",
+        ActionCategory.LOGIC,
+        20,
+        "🐍 Hydra Slayer"
+    ),
     DECOMPOSE_CONDITIONAL("Decompose Conditional", ActionCategory.LOGIC, 12, "🧩 Clarity"),
     CONSOLIDATE_CONDITIONALS("Consolidate Conditionals", ActionCategory.LOGIC, 10, "👯 Deduplicator"),
     REMOVE_DEAD_CODE("Remove Dead Code", ActionCategory.LOGIC, 8, "🧟 Zombie Hunter"),
@@ -41,7 +42,12 @@ enum class RefactoringActionType(
     // D — Couplage
     INTRODUCE_INTERFACE("Introduce Interface", ActionCategory.COUPLING, 15, "🔗 Decoupler"),
     DEPENDENCY_INVERSION("Dependency Inversion", ActionCategory.COUPLING, 20, "🔗 Inverter"),
-    REPLACE_INHERITANCE_WITH_DELEGATION("Replace Inheritance with Delegation", ActionCategory.COUPLING, 18, "🔗 Delegator"),
+    REPLACE_INHERITANCE_WITH_DELEGATION(
+        "Replace Inheritance with Delegation",
+        ActionCategory.COUPLING,
+        18,
+        "🔗 Delegator"
+    ),
     BREAK_CYCLIC_DEPENDENCY("Break Cyclic Dependency", ActionCategory.COUPLING, 25, "🌀 Cycle Breaker"),
 
     // Nettoyage (Section 3)
@@ -64,8 +70,16 @@ enum class RefactoringActionType(
                 id.contains("move", ignoreCase = true) && id.contains("class", ignoreCase = true) -> MOVE_CLASS
                 id.contains("rename", ignoreCase = true) -> RENAME
                 id.contains("changeSignature", ignoreCase = true) -> CHANGE_SIGNATURE
-                id.contains("extract", ignoreCase = true) && id.contains("variable", ignoreCase = true) -> EXTRACT_VARIABLE
-                id.contains("extract", ignoreCase = true) && id.contains("constant", ignoreCase = true) -> EXTRACT_CONSTANT
+                id.contains("extract", ignoreCase = true) && id.contains(
+                    "variable",
+                    ignoreCase = true
+                ) -> EXTRACT_VARIABLE
+
+                id.contains("extract", ignoreCase = true) && id.contains(
+                    "constant",
+                    ignoreCase = true
+                ) -> EXTRACT_CONSTANT
+
                 id.contains("extract", ignoreCase = true) && id.contains("field", ignoreCase = true) -> EXTRACT_FIELD
                 id.contains("pullUp", ignoreCase = true) -> PULL_UP
                 id.contains("pushDown", ignoreCase = true) -> PUSH_DOWN

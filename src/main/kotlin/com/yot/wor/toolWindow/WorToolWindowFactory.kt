@@ -20,7 +20,7 @@ class WorToolWindowFactory : ToolWindowFactory {
         val questsPanel = QuestsPanel(project)
         val questsContent = contentFactory.createContent(
             questsPanel.getContent(),
-            "📜 Quêtes",
+            "📜 Quests",
             false
         )
         toolWindow.contentManager.addContent(questsContent)

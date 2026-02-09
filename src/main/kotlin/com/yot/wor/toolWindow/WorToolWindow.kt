@@ -10,7 +10,9 @@ import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBUI
 import com.yot.wor.domain.ActionCategory
 import com.yot.wor.domain.PlayerState
-import com.yot.wor.export.StatsExporter
+import com.yot.wor.export.exportToCsv
+import com.yot.wor.export.exportToJson
+import com.yot.wor.export.exportToMarkdown
 import com.yot.wor.services.PlayerStateService
 import java.awt.BorderLayout
 import java.awt.FlowLayout
@@ -123,12 +125,11 @@ class WorToolWindow(private val project: Project) {
 
         if (fileWrapper != null) {
             val file = fileWrapper.file
-            val exporter = StatsExporter(project)
 
             val success = when (extension) {
-                "json" -> exporter.exportToJson(file)
-                "csv" -> exporter.exportToCsv(file)
-                "md" -> exporter.exportToMarkdown(file)
+                "json" -> exportToJson(project, file)
+                "csv" -> exportToCsv(project, file)
+                "md" -> exportToMarkdown(project, file)
                 else -> false
             }
 
@@ -222,7 +223,6 @@ class WorToolWindow(private val project: Project) {
     }
 
     private fun updateUI(state: PlayerState) {
-        // Header with level icon (PNG if available, emoji otherwise)
         val icon = state.levelIconImage
         if (icon != null) {
             titleLabel.icon = icon

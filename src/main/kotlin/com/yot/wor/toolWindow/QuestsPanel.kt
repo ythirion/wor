@@ -1,6 +1,7 @@
 package com.yot.wor.toolWindow
 
 import com.intellij.openapi.project.Project
+import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.JBScrollPane
@@ -11,14 +12,13 @@ import com.yot.wor.domain.QuestStatus
 import com.yot.wor.services.QuestService
 import java.awt.BorderLayout
 import java.awt.Font
-import javax.swing.*
+import javax.swing.BorderFactory
+import javax.swing.BoxLayout
+import javax.swing.JPanel
+import javax.swing.JProgressBar
 import kotlin.math.roundToInt
 
-/**
- * Panneau pour afficher les quêtes
- */
-class QuestsPanel(private val project: Project) {
-
+class QuestsPanel(project: Project) {
     private val questService = QuestService.getInstance(project)
     private val mainPanel = JBPanel<Nothing>()
     private val questsListPanel = JBPanel<Nothing>()
@@ -28,7 +28,6 @@ class QuestsPanel(private val project: Project) {
         setupUI()
         updateUI()
 
-        // S'abonner aux changements de quêtes
         questService.addListener {
             updateUI()
         }
@@ -37,7 +36,6 @@ class QuestsPanel(private val project: Project) {
     private fun setupUI() {
         mainPanel.layout = BorderLayout()
 
-        // Header avec statistiques
         val headerPanel = JBPanel<Nothing>().apply {
             layout = BoxLayout(this, BoxLayout.Y_AXIS)
             border = JBUI.Borders.empty(10)
@@ -47,9 +45,8 @@ class QuestsPanel(private val project: Project) {
         }
 
         mainPanel.add(headerPanel, BorderLayout.NORTH)
-
-        // Liste des quêtes avec scroll
         questsListPanel.layout = BoxLayout(questsListPanel, BoxLayout.Y_AXIS)
+
         val scrollPane = JBScrollPane(questsListPanel)
         mainPanel.add(scrollPane, BorderLayout.CENTER)
     }
@@ -58,10 +55,7 @@ class QuestsPanel(private val project: Project) {
         val activeQuests = questService.getActiveQuests()
         val completedQuests = questService.getCompletedQuests()
 
-        // Update stats
         statsLabel.text = "📜 ${activeQuests.size} active quests | ✅ ${completedQuests.size} completed"
-
-        // Update list
         questsListPanel.removeAll()
 
         if (activeQuests.isEmpty()) {
@@ -69,7 +63,6 @@ class QuestsPanel(private val project: Project) {
                 border = JBUI.Borders.empty(20)
             })
         } else {
-            // Grouper par catégorie
             val questsByCategory = activeQuests.groupBy { it.category }
 
             QuestCategory.entries.forEach { category ->
@@ -109,13 +102,11 @@ class QuestsPanel(private val project: Project) {
             )
         }
 
-        // Contenu de la carte
         val contentPanel = JBPanel<Nothing>().apply {
             layout = BoxLayout(this, BoxLayout.Y_AXIS)
             border = JBUI.Borders.empty(10)
         }
 
-        // Titre avec difficulté et XP
         val titleLabel = JBLabel(buildString {
             append(quest.difficulty.icon)
             append(" ")
@@ -127,14 +118,12 @@ class QuestsPanel(private val project: Project) {
         }
         contentPanel.add(titleLabel)
 
-        // Description
         val descLabel = JBLabel("<html>${quest.description}</html>").apply {
-            foreground = java.awt.Color.GRAY
+            foreground = JBColor.GRAY
             border = JBUI.Borders.empty(5, 0)
         }
         contentPanel.add(descLabel)
 
-        // Objectifs
         quest.objectives.forEach { objective ->
             val objectivePanel = JBPanel<Nothing>().apply {
                 layout = BorderLayout()
@@ -142,11 +131,11 @@ class QuestsPanel(private val project: Project) {
             }
 
             val icon = if (objective.isCompleted) "✅" else "⬜"
-            val objectiveLabel = JBLabel("$icon ${objective.description}: ${objective.currentCount}/${objective.targetCount}")
+            val objectiveLabel =
+                JBLabel("$icon ${objective.description}: ${objective.currentCount}/${objective.targetCount}")
 
             objectivePanel.add(objectiveLabel, BorderLayout.WEST)
 
-            // Barre de progression
             if (!objective.isCompleted) {
                 val progressBar = JProgressBar(0, 100).apply {
                     value = (objective.progress * 100).roundToInt()
@@ -160,17 +149,16 @@ class QuestsPanel(private val project: Project) {
             contentPanel.add(objectivePanel)
         }
 
-        // Global progress
         val globalProgress = JProgressBar(0, 100).apply {
             value = (quest.progress * 100).roundToInt()
             isStringPainted = true
             string = "Progress: ${(quest.progress * 100).roundToInt()}%"
-            border = JBUI.Borders.empty(5, 0, 0, 0)
+            border = JBUI.Borders.emptyTop(5)
 
             foreground = when {
-                quest.progress >= 1.0 -> java.awt.Color.GREEN
-                quest.progress >= 0.5 -> java.awt.Color.ORANGE
-                else -> java.awt.Color.BLUE
+                quest.progress >= 1.0 -> JBColor.GREEN
+                quest.progress >= 0.5 -> JBColor.ORANGE
+                else -> JBColor.BLUE
             }
         }
         contentPanel.add(globalProgress)
@@ -178,9 +166,9 @@ class QuestsPanel(private val project: Project) {
         // Status
         if (quest.status == QuestStatus.IN_PROGRESS) {
             val statusLabel = JBLabel("🔥 In progress...").apply {
-                foreground = java.awt.Color.ORANGE
+                foreground = JBColor.ORANGE
                 font = Font(font.name, Font.ITALIC, 11)
-                border = JBUI.Borders.empty(5, 0, 0, 0)
+                border = JBUI.Borders.emptyTop(5)
             }
             contentPanel.add(statusLabel)
         }

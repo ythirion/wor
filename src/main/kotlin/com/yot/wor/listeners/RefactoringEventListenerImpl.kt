@@ -8,12 +8,7 @@ import com.yot.wor.domain.RefactoringAction
 import com.yot.wor.domain.RefactoringActionType
 import com.yot.wor.services.RefactoringDetectionService
 
-/**
- * Implémentation du listener pour les événements de refactoring
- * Enregistré via plugin.xml comme projectListener
- */
 class RefactoringEventListenerImpl(private val project: Project) : RefactoringEventListener {
-
     private val detectionService: RefactoringDetectionService by lazy {
         RefactoringDetectionService.getInstance(project)
     }

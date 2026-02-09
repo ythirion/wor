@@ -17,7 +17,6 @@ class WorNotificationsTest : BasePlatformTestCase() {
         super.setUp()
         notifications.clear()
 
-        // Écouter les notifications
         project.messageBus.connect(testRootDisposable).subscribe(
             Notifications.TOPIC,
             object : Notifications {

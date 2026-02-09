@@ -2,9 +2,6 @@ package com.yot.wor.domain
 
 import java.time.Instant
 
-/**
- * Représente une quête pour le joueur
- */
 data class Quest(
     val id: String,
     val title: String,
@@ -17,15 +14,7 @@ data class Quest(
     val createdAt: Instant = Instant.now(),
     val completedAt: Instant? = null
 ) {
-    /**
-     * Vérifie si la quête est complétée
-     */
-    val isCompleted: Boolean
-        get() = objectives.all { it.isCompleted }
-
-    /**
-     * Progression de la quête (0.0 à 1.0)
-     */
+    val isCompleted: Boolean = objectives.all { it.isCompleted }
     val progress: Double
         get() {
             if (objectives.isEmpty()) return 0.0
@@ -34,24 +23,15 @@ data class Quest(
         }
 }
 
-/**
- * Objectif d'une quête
- */
 data class QuestObjective(
     val description: String,
     val targetCount: Int,
     val currentCount: Int = 0
 ) {
-    val isCompleted: Boolean
-        get() = currentCount >= targetCount
-
-    val progress: Double
-        get() = if (targetCount > 0) currentCount.toDouble() / targetCount else 0.0
+    val isCompleted: Boolean = currentCount >= targetCount
+    val progress: Double = if (targetCount > 0) currentCount.toDouble() / targetCount else 0.0
 }
 
-/**
- * Quest category
- */
 enum class QuestCategory(val displayName: String, val icon: String) {
     REFACTORING("Refactoring", "♻️"),
     TESTING("Testing", "🧪"),
@@ -60,9 +40,6 @@ enum class QuestCategory(val displayName: String, val icon: String) {
     DAILY("Daily", "📅")
 }
 
-/**
- * Quest difficulty
- */
 enum class QuestDifficulty(val displayName: String, val icon: String, val xpMultiplier: Double) {
     EASY("Easy", "⭐", 1.0),
     MEDIUM("Medium", "⭐⭐", 1.5),
@@ -70,13 +47,8 @@ enum class QuestDifficulty(val displayName: String, val icon: String, val xpMult
     EXPERT("Expert", "⭐⭐⭐⭐", 3.0)
 }
 
-/**
- * Quest status
- */
 enum class QuestStatus {
     AVAILABLE,      // Available
     IN_PROGRESS,    // In progress
-    COMPLETED,      // Completed
-    FAILED,         // Failed
-    EXPIRED         // Expired
+    COMPLETED       // Completed
 }
