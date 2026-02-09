@@ -1,7 +1,7 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.yot.craftrpg</id>
-    <name>craft-rpg</name>
+    <id>com.yot.wor</id>
+    <name>world-of-refactoring</name>
     <vendor>yot</vendor>
 
     <depends>com.intellij.modules.platform</depends>
@@ -9,25 +9,24 @@
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.yot.craftrpg.toolWindow.CraftRPGToolWindowFactory"
-                    id="Craft RPG"
+        <toolWindow factoryClass="com.yot.wor.toolWindow.WorToolWindowFactory"
+                    id="World Of Refactoring"
                     anchor="right"
-                    icon="com.yot.craftrpg.CraftRPGIcons.TOOL_WINDOW"/>
-        <postStartupActivity implementation="com.yot.craftrpg.startup.MyProjectActivity" />
-        <notificationGroup id="Craft RPG Notifications"
+                    icon="com.yot.wor.Icons.TOOL_WINDOW"/>
+        <notificationGroup id="WoR Notifications"
                           displayType="BALLOON"
                           isLogByDefault="false"/>
     </extensions>
 
     <projectServices>
-        <service serviceImplementation="com.yot.craftrpg.services.RefactoringDetectionService"/>
-        <service serviceImplementation="com.yot.craftrpg.services.PlayerStateService"/>
-        <service serviceImplementation="com.yot.craftrpg.services.QuestService"/>
-        <service serviceImplementation="com.yot.craftrpg.settings.CraftRPGSettings"/>
+        <service serviceImplementation="com.yot.wor.services.RefactoringDetectionService"/>
+        <service serviceImplementation="com.yot.wor.services.PlayerStateService"/>
+        <service serviceImplementation="com.yot.wor.services.QuestService"/>
+        <service serviceImplementation="com.yot.wor.settings.WoRSettings"/>
     </projectServices>
 
     <projectListeners>
-        <listener class="com.yot.craftrpg.listeners.RefactoringEventListenerImpl"
+        <listener class="com.yot.wor.listeners.RefactoringEventListenerImpl"
                   topic="com.intellij.refactoring.listeners.RefactoringEventListener"/>
     </projectListeners>
 </idea-plugin>

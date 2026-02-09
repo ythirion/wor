@@ -1,6 +1,6 @@
 # Level Icons
 
-This directory contains the level icons for Craft RPG.
+This directory contains the level icons for WoR.
 
 ## Required Icons
 

@@ -1,6 +1,6 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# craft-rpg Changelog
+# WoR - World Of Refactoring
 
 ## [Unreleased]
 ### Added
