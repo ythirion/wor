@@ -142,6 +142,14 @@ class QuestsPanel(project: Project) {
                     isStringPainted = true
                     string = "${(objective.progress * 100).roundToInt()}%"
                     preferredSize = java.awt.Dimension(100, 20)
+
+                    // Set color based on progress - visible in both light and dark themes
+                    foreground = when {
+                        objective.progress >= 0.75 -> JBColor.GREEN
+                        objective.progress >= 0.5 -> JBColor(0x4A9EFF, 0x4A9EFF) // Bright blue
+                        objective.progress >= 0.25 -> JBColor.ORANGE
+                        else -> JBColor(0x9370DB, 0xB19CD9) // Purple - visible in both themes
+                    }
                 }
                 objectivePanel.add(progressBar, BorderLayout.EAST)
             }

@@ -1,30 +1,13 @@
-## [0.0.1]
+# WoR - World Of Refactoring
 
-### 🚀 Features
+## [Unreleased]
 
-- Rename plugin
-- Add refactoring XP
-- Add notification
-- Add icons per level
-- Rename to wor
-- Add license
-- Use qodana
-- Add marketplace id
-- Adapt dependabot config
+## [0.0.1] - 2026-02-09
 
-### 🐛 Bug Fixes
+### Added
 
-- Not used properties
-- Not used properties
-- Remove idea folder
-- Remove useless files
-- README file for plugin description
+- Initial scaffold created
+  from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-### 💼 Other
-
-- Colors in UI
-
-### 🚜 Refactor
-
-- Simplify code
-- Simplify code
+[Unreleased]: https://github.com/ythirion/wor/compare/0.0.1...HEAD
+[0.0.1]: https://github.com/ythirion/wor/commits/0.0.1

@@ -4,6 +4,7 @@ import com.intellij.openapi.fileChooser.FileChooserFactory
 import com.intellij.openapi.fileChooser.FileSaverDescriptor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
+import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.components.JBScrollPane
@@ -238,6 +239,14 @@ class WorToolWindow(private val project: Project) {
         val progress = (state.levelProgress * 100).roundToInt()
         progressBar.value = progress
         progressBar.string = "$progress%"
+
+        // Set color based on progress - visible in both light and dark themes
+        progressBar.foreground = when {
+            progress >= 75 -> JBColor.GREEN
+            progress >= 50 -> JBColor(0x4A9EFF, 0x4A9EFF) // Bright blue
+            progress >= 25 -> JBColor.ORANGE
+            else -> JBColor(0x9370DB, 0xB19CD9) // Purple - visible in both themes
+        }
 
         // Global stats
         totalActionsLabel.text = "🎯 Total actions: ${state.actionsHistory.size}"
