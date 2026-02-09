@@ -158,12 +158,11 @@ class QuestsPanel(project: Project) {
             foreground = when {
                 quest.progress >= 1.0 -> JBColor.GREEN
                 quest.progress >= 0.5 -> JBColor.ORANGE
-                else -> JBColor.BLUE
+                else -> JBColor.LIGHT_GRAY
             }
         }
         contentPanel.add(globalProgress)
 
-        // Status
         if (quest.status == QuestStatus.IN_PROGRESS) {
             val statusLabel = JBLabel("🔥 In progress...").apply {
                 foreground = JBColor.ORANGE
