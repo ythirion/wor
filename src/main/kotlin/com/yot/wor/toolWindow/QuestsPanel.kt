@@ -60,11 +60,13 @@ class QuestsPanel(project: Project) {
         statsLabel.text = "📜 ${activeQuests.size} active quests | ✅ ${completedQuests.size} completed"
         questsListPanel.removeAll()
 
-        if (activeQuests.isEmpty()) {
-            questsListPanel.add(JBLabel("✨ No quests available at the moment").apply {
-                border = JBUI.Borders.empty(20)
-            })
-        } else {
+        if (activeQuests.isEmpty())
+            questsListPanel.add(
+                JBLabel("✨ No quests available at the moment")
+                    .apply {
+                        border = JBUI.Borders.empty(20)
+                    })
+        else {
             val questsByCategory = activeQuests.groupBy { it.category }
 
             QuestCategory.entries.forEach { category ->
@@ -168,9 +170,6 @@ class QuestsPanel(project: Project) {
 
     fun getContent(): JPanel = mainPanel
 
-    /**
-     * Creates a progress bar with visible text in both light and dark themes
-     */
     private fun createVisibleProgressBar(progress: Double, minWidth: Int = 100): JProgressBar {
         return JProgressBar(0, 100).apply {
             value = (progress * 100).roundToInt()
@@ -180,7 +179,6 @@ class QuestsPanel(project: Project) {
                 preferredSize = java.awt.Dimension(minWidth, 20)
             }
 
-            // Set bar color based on progress
             val barColor = when {
                 progress >= 1.0 -> JBColor.GREEN
                 progress >= 0.75 -> JBColor(0x7CB342, 0x9CCC65) // Light green
@@ -189,7 +187,6 @@ class QuestsPanel(project: Project) {
                 else -> JBColor(0x9370DB, 0xB19CD9) // Purple
             }
 
-            // Custom UI to ensure text is always visible with high contrast
             setUI(object : BasicProgressBarUI() {
                 override fun getSelectionForeground(): Color {
                     return JBColor.WHITE
@@ -199,7 +196,6 @@ class QuestsPanel(project: Project) {
                     return JBColor.foreground()
                 }
             })
-
             foreground = barColor
         }
     }

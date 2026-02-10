@@ -12,49 +12,49 @@ import com.intellij.openapi.project.Project
     storages = [Storage("wor-settings.xml")]
 )
 class WoRSettings : PersistentStateComponent<WoRSettings.State> {
-    private var myState = State()
+    private var worState = State()
 
     data class State(
         var showXPNotifications: Boolean = true,
         var showLevelUpNotifications: Boolean = true,
         var showComboNotifications: Boolean = true,
         var showAchievementNotifications: Boolean = true,
-        var notificationDuration: Int = 3000 // millisecondes
+        var notificationDuration: Int = 3000
     )
 
-    override fun getState(): State = myState
+    override fun getState(): State = worState
     override fun loadState(state: State) {
-        myState = state
+        worState = state
     }
 
     var showXPNotifications: Boolean
-        get() = myState.showXPNotifications
+        get() = worState.showXPNotifications
         set(value) {
-            myState.showXPNotifications = value
+            worState.showXPNotifications = value
         }
 
     var showLevelUpNotifications: Boolean
-        get() = myState.showLevelUpNotifications
+        get() = worState.showLevelUpNotifications
         set(value) {
-            myState.showLevelUpNotifications = value
+            worState.showLevelUpNotifications = value
         }
 
     var showComboNotifications: Boolean
-        get() = myState.showComboNotifications
+        get() = worState.showComboNotifications
         set(value) {
-            myState.showComboNotifications = value
+            worState.showComboNotifications = value
         }
 
     var showAchievementNotifications: Boolean
-        get() = myState.showAchievementNotifications
+        get() = worState.showAchievementNotifications
         set(value) {
-            myState.showAchievementNotifications = value
+            worState.showAchievementNotifications = value
         }
 
     var notificationDuration: Int
-        get() = myState.notificationDuration
+        get() = worState.notificationDuration
         set(value) {
-            myState.notificationDuration = value
+            worState.notificationDuration = value
         }
 
     companion object {
