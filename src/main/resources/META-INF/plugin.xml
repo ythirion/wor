@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.yot.wor</id>
-    <name>world-of-refactoring</name>
+    <name>World Of Refactoring</name>
     <vendor>yot</vendor>
 
     <depends>com.intellij.modules.platform</depends>
