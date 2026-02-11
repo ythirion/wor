@@ -12,6 +12,7 @@ import com.yot.wor.domain.QuestStatus
 import com.yot.wor.services.QuestService
 import java.awt.BorderLayout
 import java.awt.Color
+import java.awt.Component
 import java.awt.Font
 import javax.swing.BorderFactory
 import javax.swing.BoxLayout
@@ -43,6 +44,7 @@ class QuestsPanel(project: Project) {
             border = JBUI.Borders.empty(10)
 
             statsLabel.font = Font(statsLabel.font.name, Font.BOLD, 14)
+            statsLabel.alignmentX = Component.LEFT_ALIGNMENT
             add(statsLabel)
         }
 
@@ -65,6 +67,7 @@ class QuestsPanel(project: Project) {
                 JBLabel("✨ No quests available at the moment")
                     .apply {
                         border = JBUI.Borders.empty(20)
+                        alignmentX = Component.LEFT_ALIGNMENT
                     })
         else {
             val questsByCategory = activeQuests.groupBy { it.category }
@@ -88,6 +91,7 @@ class QuestsPanel(project: Project) {
                 JBUI.Borders.empty(10, 5),
                 BorderFactory.createTitledBorder("${category.icon} ${category.displayName}")
             )
+            alignmentX = Component.LEFT_ALIGNMENT
         }
 
         quests.forEach { quest ->
@@ -119,12 +123,14 @@ class QuestsPanel(project: Project) {
             append("(${(quest.xpReward * quest.difficulty.xpMultiplier).toInt()} XP)")
         }).apply {
             font = Font(font.name, Font.BOLD, 13)
+            alignmentX = Component.LEFT_ALIGNMENT
         }
         contentPanel.add(titleLabel)
 
         val descLabel = JBLabel("<html>${quest.description}</html>").apply {
             foreground = JBColor.GRAY
             border = JBUI.Borders.empty(5, 0)
+            alignmentX = Component.LEFT_ALIGNMENT
         }
         contentPanel.add(descLabel)
 
@@ -145,12 +151,14 @@ class QuestsPanel(project: Project) {
                 objectivePanel.add(progressBar, BorderLayout.EAST)
             }
 
+            objectivePanel.alignmentX = Component.LEFT_ALIGNMENT
             contentPanel.add(objectivePanel)
         }
 
         val globalProgress = createVisibleProgressBar(quest.progress, 0).apply {
             string = "Progress: ${(quest.progress * 100).roundToInt()}%"
             border = JBUI.Borders.emptyTop(5)
+            alignmentX = Component.LEFT_ALIGNMENT
         }
         contentPanel.add(globalProgress)
 
@@ -159,6 +167,7 @@ class QuestsPanel(project: Project) {
                 foreground = JBColor.ORANGE
                 font = Font(font.name, Font.ITALIC, 11)
                 border = JBUI.Borders.emptyTop(5)
+                alignmentX = Component.LEFT_ALIGNMENT
             }
             contentPanel.add(statusLabel)
         }
