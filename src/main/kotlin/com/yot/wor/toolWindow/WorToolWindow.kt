@@ -26,6 +26,7 @@ class WorToolWindow(private val project: Project) {
     private val mainPanel = JBPanel<Nothing>()
 
     // UI Components
+    private val iconLabel = JBLabel()
     private val titleLabel = JBLabel()
     private val levelLabel = JBLabel()
     private val xpLabel = JBLabel()
@@ -167,20 +168,28 @@ class WorToolWindow(private val project: Project) {
 
     private fun createHeaderPanel(): JPanel {
         return JBPanel<Nothing>().apply {
-            layout = BoxLayout(this, BoxLayout.Y_AXIS)
+            layout = BorderLayout()
             border = JBUI.Borders.empty(5)
-
-            // Icon + Title panel
-            val iconTitlePanel = JBPanel<Nothing>().apply {
-                layout = FlowLayout(LEFT)
-            }
 
             titleLabel.font = Font(titleLabel.font.name, Font.BOLD, 18)
             levelLabel.font = Font(levelLabel.font.name, Font.BOLD, 14)
 
-            iconTitlePanel.add(titleLabel)
-            add(iconTitlePanel)
-            add(levelLabel)
+            val textPanel = JBPanel<Nothing>().apply {
+                layout = BoxLayout(this, BoxLayout.Y_AXIS)
+                alignmentX = Component.LEFT_ALIGNMENT
+                border = JBUI.Borders.emptyLeft(10)
+
+                add(titleLabel)
+                add(levelLabel)
+            }
+
+            val contentPanel = JBPanel<Nothing>().apply {
+                layout = FlowLayout(LEFT, 5, 0)
+                add(iconLabel)
+                add(textPanel)
+            }
+
+            add(contentPanel, BorderLayout.WEST)
         }
     }
 
@@ -239,11 +248,13 @@ class WorToolWindow(private val project: Project) {
     private fun updateUI(state: PlayerState) {
         val icon = state.levelIconImage
         if (icon != null) {
-            titleLabel.icon = icon
-            titleLabel.text = " ${state.title}" // Space for padding
+            iconLabel.icon = icon
+            iconLabel.text = null
+            titleLabel.text = state.title
         } else {
-            titleLabel.icon = null
-            titleLabel.text = "${state.levelIconEmoji} ${state.title}"
+            iconLabel.icon = null
+            iconLabel.text = state.levelIconEmoji
+            titleLabel.text = state.title
         }
         levelLabel.text = "Level ${state.level} - ${state.levelTier}"
 
