@@ -101,7 +101,7 @@ Once installed, the plugin automatically tracks your refactoring actions:
 
 ### Event Flow
 
-The plugin automatically detects and rewards refactoring actions through a sophisticated event-driven architecture:
+The plugin automatically detects and rewards refactoring actions through an event-driven architecture:
 
 ```mermaid
 sequenceDiagram
@@ -194,6 +194,155 @@ Built with:
 - IntelliJ Platform SDK 2025.2.5
 - Kotest for testing
 - Gradle for build automation
+
+## How to Release
+
+This project uses an automated release workflow through GitHub Actions. Follow these steps to create a new release:
+
+### Release Process Overview
+
+```
+Push to main → Build Workflow → Draft Release Created → Manual Publish → Release Workflow → JetBrains Marketplace
+```
+
+### Step-by-Step Release Guide
+
+#### 1. Prepare the CHANGELOG
+
+Update `CHANGELOG.md` with your changes under the `[Unreleased]` section:
+
+```markdown
+## [Unreleased]
+
+### Added
+
+- New features you've added
+
+### Changed
+
+- Changes to existing functionality
+
+### Fixed
+
+- Bug fixes
+```
+
+**Important:** Always maintain an `[Unreleased]` section at the top of your changelog.
+
+#### 2. Update the Version
+
+Edit `gradle.properties` and increment the version number:
+
+```properties
+pluginVersion=0.0.2  # Update this (following SemVer)
+```
+
+**Version Format (SemVer):**
+
+- `0.0.x` - Patch: Bug fixes and minor changes
+- `0.x.0` - Minor: New features, backwards compatible
+- `x.0.0` - Major: Breaking changes
+
+#### 3. Commit and Push
+
+```bash
+git add CHANGELOG.md gradle.properties
+git commit -m "chore: prepare release 0.0.2"
+git push origin main
+```
+
+#### 4. Wait for Build Workflow
+
+The Build workflow will automatically:
+
+- ✅ Build the plugin
+- ✅ Run tests
+- ✅ Inspect code with Qodana
+- ✅ Verify plugin compatibility
+- ✅ **Create a Draft Release** on GitHub with changelog content
+
+#### 5. Review and Publish the Release
+
+1. Go to your [GitHub Releases page](https://github.com/ythirion/wor/releases)
+2. You'll see a **Draft Release** with version `0.0.2`
+3. Review the release notes (automatically extracted from `[Unreleased]`)
+4. Click **"Publish release"**
+
+#### 6. Automatic Publication
+
+Once published, the Release workflow automatically:
+
+- ✅ Updates the CHANGELOG (moves `[Unreleased]` to versioned section)
+- ✅ **Publishes the plugin to JetBrains Marketplace**
+- ✅ Uploads the plugin ZIP as a release asset
+- ✅ Creates a Pull Request with the updated CHANGELOG
+
+#### 7. Merge the Changelog PR
+
+After the release, a PR will be created to update the CHANGELOG. Review and merge it.
+
+### CHANGELOG Format Example
+
+Your CHANGELOG should follow this format:
+
+```markdown
+# WoR - World Of Refactoring
+
+## [Unreleased]
+
+### Added
+
+- Features for the next release
+
+## [0.0.2] - 2026-02-11
+
+### Added
+
+- Global state persistence across projects
+- Quest progress saving
+
+### Changed
+
+- Services now run at Application level
+
+## [0.0.1] - 2026-02-09
+
+### Added
+
+- Initial release
+
+[Unreleased]: https://github.com/ythirion/wor/compare/0.0.2...HEAD
+
+[0.0.2]: https://github.com/ythirion/wor/compare/0.0.1...0.0.2
+
+[0.0.1]: https://github.com/ythirion/wor/commits/0.0.1
+```
+
+### Troubleshooting
+
+#### GitHub Actions Cannot Create Pull Requests
+
+If you encounter the error: `GitHub Actions is not permitted to create or approve pull requests`
+
+**Solution:** Enable the setting in your repository:
+
+1. Go to `Settings` → `Actions` → `General`
+2. Scroll to **"Workflow permissions"**
+3. Check ✅ **"Allow GitHub Actions to create and approve pull requests"**
+4. Save changes
+
+### Release Checklist
+
+Before releasing, ensure you've completed:
+
+- [ ] Updated `CHANGELOG.md` with all changes under `[Unreleased]`
+- [ ] Updated `pluginVersion` in `gradle.properties`
+- [ ] Committed and pushed changes to `main`
+- [ ] Build workflow completed successfully
+- [ ] Reviewed the draft release notes
+- [ ] Published the release on GitHub
+- [ ] Verified plugin appears on JetBrains Marketplace
+- [ ] Merged the automated changelog PR
 
 ## Contributing
 

@@ -7,7 +7,7 @@ import com.yot.wor.domain.RefactoringAction
 import java.util.concurrent.CopyOnWriteArrayList
 
 @Service(Service.Level.PROJECT)
-class RefactoringDetectionService() {
+class RefactoringDetectionService(private val project: Project) {
     private val detectedActions = CopyOnWriteArrayList<RefactoringAction>()
     private val listeners = CopyOnWriteArrayList<RefactoringActionListener>()
 
@@ -19,6 +19,10 @@ class RefactoringDetectionService() {
         thisLogger().info("Refactoring detected: ${action.type.displayName} (+${action.xpReward} XP)")
         detectedActions.add(action)
         notifyListeners(action)
+
+        // Notify global services
+        PlayerStateService.getInstance().addRefactoringAction(action, project)
+        QuestService.getInstance().updateQuestProgress(action)
     }
 
     fun addListener(listener: RefactoringActionListener) {

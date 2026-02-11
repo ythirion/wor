@@ -15,7 +15,7 @@ class QuestServiceTest : BasePlatformTestCase() {
 
     override fun setUp() {
         super.setUp()
-        service = QuestService.getInstance(project)
+        service = QuestService.getInstance()
     }
 
     fun `test should have starter quests`() {
@@ -101,8 +101,8 @@ class QuestServiceTest : BasePlatformTestCase() {
     }
 
     fun `test getInstance should return same instance`() {
-        val service1 = QuestService.getInstance(project)
-        val service2 = QuestService.getInstance(project)
+        val service1 = QuestService.getInstance()
+        val service2 = QuestService.getInstance()
 
         service1 shouldBe service2
     }

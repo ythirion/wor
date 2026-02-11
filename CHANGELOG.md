@@ -6,6 +6,7 @@
 
 - Better visibility of the Quests
 - Add icons for each refactorer levels
+- Store state globally to improve the UX
 
 ## [0.0.1] - 2026-02-09
 

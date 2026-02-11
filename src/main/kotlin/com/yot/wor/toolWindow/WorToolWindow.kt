@@ -22,7 +22,7 @@ import javax.swing.plaf.basic.BasicProgressBarUI
 import kotlin.math.roundToInt
 
 class WorToolWindow(private val project: Project) {
-    private val playerStateService = PlayerStateService.getInstance(project)
+    private val playerStateService = PlayerStateService.getInstance()
     private val mainPanel = JBPanel<Nothing>()
 
     // UI Components
@@ -144,9 +144,9 @@ class WorToolWindow(private val project: Project) {
             val file = fileWrapper.file
 
             val success = when (extension) {
-                "json" -> exportToJson(project, file)
-                "csv" -> exportToCsv(project, file)
-                "md" -> exportToMarkdown(project, file)
+                "json" -> exportToJson(file)
+                "csv" -> exportToCsv(file)
+                "md" -> exportToMarkdown(file)
                 else -> false
             }
 

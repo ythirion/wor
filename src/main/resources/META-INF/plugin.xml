@@ -15,10 +15,13 @@
                            isLogByDefault="false"/>
     </extensions>
 
-    <projectServices>
-        <service serviceImplementation="com.yot.wor.services.RefactoringDetectionService"/>
+    <applicationServices>
         <service serviceImplementation="com.yot.wor.services.PlayerStateService"/>
         <service serviceImplementation="com.yot.wor.services.QuestService"/>
+    </applicationServices>
+
+    <projectServices>
+        <service serviceImplementation="com.yot.wor.services.RefactoringDetectionService"/>
         <service serviceImplementation="com.yot.wor.settings.WoRSettings"/>
     </projectServices>
 

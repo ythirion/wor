@@ -1,12 +1,11 @@
 package com.yot.wor.export
 
-import com.intellij.openapi.project.Project
 import com.yot.wor.services.PlayerStateService
 import java.io.File
 
-fun exportToCsv(project: Project, file: File): Boolean {
+fun exportToCsv(file: File): Boolean {
     return try {
-        val playerState = PlayerStateService.getInstance(project).playerState()
+        val playerState = PlayerStateService.getInstance().playerState()
 
         val csv = buildString {
             // Header

@@ -1,6 +1,5 @@
 package com.yot.wor.export
 
-import com.intellij.openapi.project.Project
 import com.yot.wor.domain.PlayerState
 import com.yot.wor.domain.Quest
 import com.yot.wor.services.PlayerStateService
@@ -39,11 +38,11 @@ data class CategoryInfo(
 
 private val json = Json { prettyPrint = true }
 
-fun exportToJson(project: Project, file: File): Boolean {
+fun exportToJson(file: File): Boolean {
     return try {
-        val playerState = PlayerStateService.getInstance(project).playerState()
-        val quests = QuestService.getInstance(project).activeQuests()
-        val completedQuests = QuestService.getInstance(project).completedQuests()
+        val playerState = PlayerStateService.getInstance().playerState()
+        val quests = QuestService.getInstance().activeQuests()
+        val completedQuests = QuestService.getInstance().completedQuests()
 
         val export = buildStatsExport(playerState, quests, completedQuests)
         val jsonString = json.encodeToString(export)

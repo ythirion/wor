@@ -1,6 +1,5 @@
 package com.yot.wor.toolWindow
 
-import com.intellij.openapi.project.Project
 import com.intellij.ui.JBColor
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
@@ -21,8 +20,8 @@ import javax.swing.JProgressBar
 import javax.swing.plaf.basic.BasicProgressBarUI
 import kotlin.math.roundToInt
 
-class QuestsPanel(project: Project) {
-    private val questService = QuestService.getInstance(project)
+class QuestsPanel() {
+    private val questService = QuestService.getInstance()
     private val mainPanel = JBPanel<Nothing>()
     private val questsListPanel = JBPanel<Nothing>()
     private val statsLabel = JBLabel()

@@ -1,5 +1,6 @@
 package com.yot.wor.services
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
@@ -11,14 +12,12 @@ import com.yot.wor.notifications.WorNotifications
 import java.time.Instant
 import java.util.concurrent.CopyOnWriteArrayList
 
-@Service(Service.Level.PROJECT)
+@Service(Service.Level.APP)
 @State(
     name = "WoRPlayerState",
     storages = [Storage("wor-player.xml")]
 )
-class PlayerStateService(
-    private val project: Project
-) : PersistentStateComponent<PlayerStateService.State> {
+class PlayerStateService : PersistentStateComponent<PlayerStateService.State> {
 
     private val listeners = CopyOnWriteArrayList<PlayerStateListener>()
     private var currentState = State()
@@ -39,12 +38,6 @@ class PlayerStateService(
         fun onStateChanged(state: PlayerState)
     }
 
-    init {
-        RefactoringDetectionService.getInstance(project).addListener { action ->
-            addRefactoringAction(action)
-        }
-    }
-
     override fun getState(): State = currentState
 
     override fun loadState(state: State) {
@@ -52,7 +45,7 @@ class PlayerStateService(
         thisLogger().info("Player state loaded: ${state.totalXP} XP, ${state.actionsHistory.size} actions")
     }
 
-    fun addRefactoringAction(action: RefactoringAction) {
+    fun addRefactoringAction(action: RefactoringAction, project: Project) {
         val persistedAction = PersistedAction(
             actionTypeId = action.type.name,
             timestamp = action.timestamp.toEpochMilli(),
@@ -148,7 +141,7 @@ class PlayerStateService(
     }
 
     companion object {
-        fun getInstance(project: Project): PlayerStateService =
-            project.getService(PlayerStateService::class.java)
+        fun getInstance(): PlayerStateService =
+            ApplicationManager.getApplication().getService(PlayerStateService::class.java)
     }
 }
