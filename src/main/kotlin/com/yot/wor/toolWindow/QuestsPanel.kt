@@ -60,14 +60,15 @@ class QuestsPanel() {
         statsLabel.text = "📜 ${activeQuests.size} active quests | ✅ ${completedQuests.size} completed"
         questsListPanel.removeAll()
 
-        if (activeQuests.isEmpty())
+        // Active Quests Section
+        if (activeQuests.isEmpty()) {
             questsListPanel.add(
                 JBLabel("✨ No quests available at the moment")
                     .apply {
                         border = JBUI.Borders.empty(20)
                         alignmentX = Component.LEFT_ALIGNMENT
                     })
-        else {
+        } else {
             val questsByCategory = activeQuests.groupBy { it.category }
 
             QuestCategory.entries.forEach { category ->
@@ -76,6 +77,11 @@ class QuestsPanel() {
                     questsListPanel.add(createCategorySection(category, categoryQuests))
                 }
             }
+        }
+
+        // Completed Quests Section
+        if (completedQuests.isNotEmpty()) {
+            questsListPanel.add(createCompletedQuestsSection(completedQuests))
         }
 
         questsListPanel.revalidate()
@@ -97,6 +103,62 @@ class QuestsPanel() {
         }
 
         return panel
+    }
+
+    private fun createCompletedQuestsSection(quests: List<Quest>): JPanel {
+        val panel = JBPanel<Nothing>().apply {
+            layout = BoxLayout(this, BoxLayout.Y_AXIS)
+            border = BorderFactory.createCompoundBorder(
+                JBUI.Borders.empty(10, 5),
+                BorderFactory.createTitledBorder("✅ Completed Quests")
+            )
+            alignmentX = Component.LEFT_ALIGNMENT
+        }
+
+        quests.forEach { quest ->
+            panel.add(createCompletedQuestCard(quest))
+        }
+
+        return panel
+    }
+
+    private fun createCompletedQuestCard(quest: Quest): JPanel {
+        val card = JBPanel<Nothing>().apply {
+            layout = BorderLayout()
+            border = BorderFactory.createCompoundBorder(
+                JBUI.Borders.empty(5),
+                BorderFactory.createEtchedBorder()
+            )
+            background = JBColor(0xE8F5E9, 0x1B5E20) // Light green background
+        }
+
+        val contentPanel = JBPanel<Nothing>().apply {
+            layout = BoxLayout(this, BoxLayout.Y_AXIS)
+            border = JBUI.Borders.empty(10)
+            isOpaque = false
+        }
+
+        val titleLabel = JBLabel(buildString {
+            append("✅ ")
+            append(quest.title)
+            append(" - ")
+            append("${(quest.xpReward * quest.difficulty.xpMultiplier).toInt()} XP")
+        }).apply {
+            font = Font(font.name, Font.BOLD, 13)
+            alignmentX = Component.LEFT_ALIGNMENT
+        }
+        contentPanel.add(titleLabel)
+
+        val descLabel = JBLabel("<html>${quest.description}</html>").apply {
+            foreground = JBColor.GRAY
+            border = JBUI.Borders.empty(5, 0)
+            alignmentX = Component.LEFT_ALIGNMENT
+        }
+        contentPanel.add(descLabel)
+
+        card.add(contentPanel, BorderLayout.CENTER)
+
+        return card
     }
 
     private fun createQuestCard(quest: Quest): JPanel {
