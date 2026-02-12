@@ -1,14 +1,14 @@
 package com.yot.wor.services
 
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
-import com.yot.wor.domain.Quest
-import com.yot.wor.domain.QuestCategory
-import com.yot.wor.domain.QuestDifficulty
-import com.yot.wor.domain.QuestObjective
+import com.yot.wor.domain.*
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.ints.shouldBeGreaterThan
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import java.util.*
 
 class QuestServiceTest : BasePlatformTestCase() {
     private lateinit var service: QuestService
@@ -105,5 +105,44 @@ class QuestServiceTest : BasePlatformTestCase() {
         val service2 = QuestService.getInstance()
 
         service1 shouldBe service2
+    }
+
+    fun `test should complete Extract Expert quest after 5 extract method actions`() {
+        val extractExpertQuest = Quest(
+            id = UUID.randomUUID().toString(),
+            title = "Extract Expert",
+            description = "Extract 5 methods to improve readability",
+            category = QuestCategory.REFACTORING,
+            xpReward = 200,
+            difficulty = QuestDifficulty.MEDIUM,
+            objectives = listOf(
+                QuestObjective("Extract Method × 5", targetCount = 5)
+            )
+        )
+
+        service.addQuest(extractExpertQuest)
+
+        service.activeQuests() shouldContain extractExpertQuest
+        service.completedQuests() shouldNotContain extractExpertQuest
+
+        repeat(5) {
+            service.updateQuestProgress(
+                RefactoringAction(
+                    type = RefactoringActionType.EXTRACT_METHOD,
+                    fileName = "TestFile.kt",
+                    elementName = "extractedMethod${it + 1}"
+                )
+            )
+        }
+
+        service.activeQuests().none { it.id == extractExpertQuest.id } shouldBe true
+
+        val completedQuest = service.completedQuests().find { it.id == extractExpertQuest.id }
+        completedQuest shouldNotBe null
+        completedQuest!!.isCompleted shouldBe true
+        completedQuest.status shouldBe QuestStatus.COMPLETED
+        completedQuest.completedAt shouldNotBe null
+        completedQuest.objectives.all { it.isCompleted } shouldBe true
+        completedQuest.objectives[0].currentCount shouldBe 5
     }
 }

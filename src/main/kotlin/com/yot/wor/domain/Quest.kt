@@ -14,8 +14,10 @@ data class Quest(
     val createdAt: Instant = Instant.now(),
     val completedAt: Instant? = null
 ) {
-    val isCompleted: Boolean = objectives.all { it.isCompleted }
-    val isAvailable: Boolean = status == QuestStatus.AVAILABLE || status == QuestStatus.IN_PROGRESS
+    val isCompleted: Boolean
+        get() = objectives.all { it.isCompleted }
+    val isAvailable: Boolean
+        get() = status == QuestStatus.AVAILABLE || status == QuestStatus.IN_PROGRESS
     val progress: Double
         get() {
             if (objectives.isEmpty()) return 0.0
@@ -29,8 +31,10 @@ data class QuestObjective(
     val targetCount: Int,
     val currentCount: Int = 0
 ) {
-    val isCompleted: Boolean = currentCount >= targetCount
-    val progress: Double = if (targetCount > 0) currentCount.toDouble() / targetCount else 0.0
+    val isCompleted: Boolean
+        get() = currentCount >= targetCount
+    val progress: Double
+        get() = if (targetCount > 0) currentCount.toDouble() / targetCount else 0.0
 }
 
 enum class QuestCategory(val displayName: String, val icon: String) {

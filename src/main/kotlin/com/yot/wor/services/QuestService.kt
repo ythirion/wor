@@ -50,8 +50,6 @@ class QuestService : PersistentStateComponent<QuestService.State> {
     }
 
     init {
-        // Generate starter quests if this is the first time (no persisted state)
-        // If state exists, loadState() will be called and will override this
         if (activeQuests.isEmpty() && completedQuests.isEmpty()) {
             generateStarterQuests()
         }
@@ -195,24 +193,45 @@ class QuestService : PersistentStateComponent<QuestService.State> {
 
     fun updateQuestProgress(action: RefactoringAction) {
         var questsUpdated = false
+        thisLogger().info("=== Quest Update: ${action.type.displayName} ===")
 
         activeQuests
             .filter { quest -> quest.isAvailable }
             .forEach { quest ->
-                val updatedObjectives = quest.objectives.map { objective ->
-                    if (shouldUpdateObjective(
-                            objective,
-                            action
-                        )
-                    ) objective.copy(currentCount = objective.currentCount + 1) else objective
+                thisLogger().info("Checking quest: ${quest.title} (status=${quest.status})")
+
+                val updatedObjectives = quest.objectives.mapIndexed { index, objective ->
+                    val shouldUpdate = shouldUpdateObjective(objective, action)
+                    thisLogger().info("  Objective $index: '${objective.description}' - ${objective.currentCount}/${objective.targetCount} - shouldUpdate=$shouldUpdate - isCompleted=${objective.isCompleted}")
+
+                    if (shouldUpdate) {
+                        val updated = objective.copy(currentCount = objective.currentCount + 1)
+                        thisLogger().info("  -> Updated to: ${updated.currentCount}/${updated.targetCount} - isCompleted=${updated.isCompleted}")
+                        updated
+                    } else objective
                 }
+
+                val allCompleted = updatedObjectives.all { it.isCompleted }
+                thisLogger().info("  All objectives completed: $allCompleted")
+
+                // Update status: COMPLETED if all objectives done, IN_PROGRESS if any progress made
+                val newStatus = when {
+                    allCompleted -> QuestStatus.COMPLETED
+                    updatedObjectives.any { it.currentCount > 0 } && quest.status == QuestStatus.AVAILABLE -> QuestStatus.IN_PROGRESS
+                    else -> quest.status
+                }
+                thisLogger().info("  New status: $newStatus")
 
                 val updatedQuest = quest.copy(
                     objectives = updatedObjectives,
-                    status = if (updatedObjectives.all { it.isCompleted }) QuestStatus.IN_PROGRESS else quest.status
+                    status = newStatus
                 )
 
+                thisLogger().info("  updatedQuest.isCompleted: ${updatedQuest.isCompleted}")
+
                 if (updatedQuest.isCompleted) {
+                    thisLogger().info("  ✅ COMPLETING QUEST: ${quest.title}")
+                    activeQuests.remove(quest)  // Remove the original quest first
                     completeQuest(updatedQuest)
                     questsUpdated = true
                 } else if (updatedQuest != quest) {
@@ -221,6 +240,7 @@ class QuestService : PersistentStateComponent<QuestService.State> {
                     if (index >= 0) {
                         activeQuests[index] = updatedQuest
                         questsUpdated = true
+                        thisLogger().info("  Quest updated in list")
                     }
                 }
             }
@@ -271,7 +291,6 @@ class QuestService : PersistentStateComponent<QuestService.State> {
             completedAt = Instant.now()
         )
 
-        activeQuests.remove(quest)
         completedQuests.add(completedQuest)
 
         val questXP = (quest.xpReward * quest.difficulty.xpMultiplier).toInt()

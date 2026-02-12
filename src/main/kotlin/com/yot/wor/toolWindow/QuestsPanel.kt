@@ -7,7 +7,6 @@ import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBUI
 import com.yot.wor.domain.Quest
 import com.yot.wor.domain.QuestCategory
-import com.yot.wor.domain.QuestStatus
 import com.yot.wor.services.QuestService
 import java.awt.BorderLayout
 import java.awt.Color
@@ -160,17 +159,6 @@ class QuestsPanel() {
             alignmentX = Component.LEFT_ALIGNMENT
         }
         contentPanel.add(globalProgress)
-
-        if (quest.status == QuestStatus.IN_PROGRESS) {
-            val statusLabel = JBLabel("🔥 In progress...").apply {
-                foreground = JBColor.ORANGE
-                font = Font(font.name, Font.ITALIC, 11)
-                border = JBUI.Borders.emptyTop(5)
-                alignmentX = Component.LEFT_ALIGNMENT
-            }
-            contentPanel.add(statusLabel)
-        }
-
         card.add(contentPanel, BorderLayout.CENTER)
 
         return card
