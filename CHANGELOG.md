@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+- Add panel to list completed quests
+
+### Fixed
+
+- Finish quests for real
+
 ## [0.0.4] - 2026-02-11
 
 ### Fixed
@@ -28,5 +38,7 @@
   from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
 [Unreleased]: https://github.com/ythirion/wor/compare/0.0.3...HEAD
+
 [0.0.3]: https://github.com/ythirion/wor/compare/0.0.1...0.0.3
+
 [0.0.1]: https://github.com/ythirion/wor/commits/0.0.1
