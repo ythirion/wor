@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-### Added
+## [0.0.5] - 2026-02-12
 
 ### Changed
 
@@ -13,8 +13,6 @@
 - Finish quests for real
 
 ## [0.0.4] - 2026-02-11
-
-### Fixed
 
 ## [0.0.3] - 2026-02-11
 
@@ -37,8 +35,8 @@
 - Initial scaffold created
   from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/ythirion/wor/compare/0.0.3...HEAD
-
+[Unreleased]: https://github.com/ythirion/wor/compare/0.0.5...HEAD
+[0.0.5]: https://github.com/ythirion/wor/compare/0.0.4...0.0.5
+[0.0.4]: https://github.com/ythirion/wor/compare/0.0.3...0.0.4
 [0.0.3]: https://github.com/ythirion/wor/compare/0.0.1...0.0.3
-
 [0.0.1]: https://github.com/ythirion/wor/commits/0.0.1
