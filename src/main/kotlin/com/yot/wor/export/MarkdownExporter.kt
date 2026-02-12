@@ -78,6 +78,25 @@ private fun buildMarkdownString(
     appendLine("- **Completed:** ${completedQuests.size}")
     appendLine()
 
+    // Completed Quests Details
+    if (completedQuests.isNotEmpty()) {
+        appendLine("### ✅ Completed Quests")
+        appendLine()
+        appendLine("| Quest | Description | XP Earned | Completed At |")
+        appendLine("|-------|-------------|-----------|--------------|")
+
+        completedQuests.forEach { quest ->
+            val questXP = (quest.xpReward * quest.difficulty.xpMultiplier).toInt()
+            val completedDate = quest.completedAt?.let {
+                LocalDateTime.ofInstant(it, java.time.ZoneId.systemDefault())
+                    .format(DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm"))
+            } ?: "N/A"
+
+            appendLine("| ${quest.difficulty.icon} ${quest.title} | ${quest.description} | $questXP XP | $completedDate |")
+        }
+        appendLine()
+    }
+
     // Top actions
     appendLine("## 🏆 Top 10 Actions")
     appendLine()

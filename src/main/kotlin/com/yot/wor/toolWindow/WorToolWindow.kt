@@ -11,8 +11,6 @@ import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.JBUI
 import com.yot.wor.domain.ActionCategory
 import com.yot.wor.domain.PlayerState
-import com.yot.wor.export.exportToCsv
-import com.yot.wor.export.exportToJson
 import com.yot.wor.export.exportToMarkdown
 import com.yot.wor.services.PlayerStateService
 import java.awt.*
@@ -103,52 +101,29 @@ class WorToolWindow(private val project: Project) {
             layout = FlowLayout(LEFT)
             border = JBUI.Borders.empty(5)
 
-            val exportButton = JButton("📤 Export Stats")
+            val exportButton = JButton("📤 Export my Stats")
             exportButton.addActionListener {
-                showExportDialog()
+                exportStats()
             }
 
             add(exportButton)
         }
     }
 
-    private fun showExportDialog() {
-        val options = arrayOf("JSON", "CSV", "Markdown", "Cancel")
-        val choice = Messages.showDialog(
-            project,
-            "Choose export format:",
-            "Export Statistics",
-            options,
-            0,
-            Messages.getQuestionIcon()
-        )
-
-        when (choice) {
-            0 -> exportStats("json")
-            1 -> exportStats("csv")
-            2 -> exportStats("md")
-        }
-    }
-
-    private fun exportStats(extension: String) {
+    private fun exportStats() {
         val descriptor = FileSaverDescriptor(
             "Export Statistics",
             "Choose where to save your statistics",
-            extension
+            "md"
         )
 
         val dialog = FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project)
-        val fileWrapper = dialog.save("wor-stats.$extension")
+        val fileWrapper = dialog.save("wor-stats.md")
 
         if (fileWrapper != null) {
             val file = fileWrapper.file
 
-            val success = when (extension) {
-                "json" -> exportToJson(file)
-                "csv" -> exportToCsv(file)
-                "md" -> exportToMarkdown(file)
-                else -> false
-            }
+            val success = exportToMarkdown(file)
 
             if (success) {
                 Messages.showInfoMessage(

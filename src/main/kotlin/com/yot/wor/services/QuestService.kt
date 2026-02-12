@@ -295,6 +295,9 @@ class QuestService : PersistentStateComponent<QuestService.State> {
 
         val questXP = (quest.xpReward * quest.difficulty.xpMultiplier).toInt()
         thisLogger().info("Quest completed: ${quest.title} (+$questXP XP)")
+
+        // Add quest XP to player's total XP
+        PlayerStateService.getInstance().addQuestXP(questXP)
     }
 
     fun addQuest(quest: Quest) {

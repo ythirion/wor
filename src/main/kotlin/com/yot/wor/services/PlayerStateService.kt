@@ -71,6 +71,24 @@ class PlayerStateService : PersistentStateComponent<PlayerStateService.State> {
         notifyListeners()
     }
 
+    fun addQuestXP(xp: Int, project: Project? = null) {
+        val oldTotalXP = currentState.totalXP
+        currentState.totalXP += xp
+
+        val oldLevel = PlayerState.calculateLevel(oldTotalXP)
+        val newLevel = PlayerState.calculateLevel(currentState.totalXP)
+
+        thisLogger().info("Quest XP gained: +$xp XP")
+
+        if (newLevel > oldLevel && project != null) {
+            val playerState = playerState()
+            thisLogger().info("🎉 Level up! $oldLevel → $newLevel - ${playerState.title}")
+            WorNotifications.notifyLevelUp(project, oldLevel, newLevel, playerState.title)
+        }
+
+        notifyListeners()
+    }
+
     fun playerState(): PlayerState {
         val actions = currentState.actionsHistory.mapNotNull { persisted ->
             try {
