@@ -62,31 +62,67 @@ enum class RefactoringActionType(
 
     companion object {
         fun fromIntellijId(id: String): RefactoringActionType? {
+            // Normalize the ID for easier matching
+            val normalizedId = id.lowercase().replace(".", "_").replace("-", "_")
+
             return when {
-                id.contains("extract", ignoreCase = true) && id.contains("method", ignoreCase = true) -> EXTRACT_METHOD
-                id.contains("inline", ignoreCase = true) && id.contains("method", ignoreCase = true) -> INLINE_METHOD
-                id.contains("extract", ignoreCase = true) && id.contains("class", ignoreCase = true) -> EXTRACT_CLASS
-                id.contains("move", ignoreCase = true) && id.contains("method", ignoreCase = true) -> MOVE_METHOD
-                id.contains("move", ignoreCase = true) && id.contains("class", ignoreCase = true) -> MOVE_CLASS
-                id.contains("rename", ignoreCase = true) -> RENAME
-                id.contains("changeSignature", ignoreCase = true) -> CHANGE_SIGNATURE
-                id.contains("extract", ignoreCase = true) && id.contains(
-                    "variable",
-                    ignoreCase = true
-                ) -> EXTRACT_VARIABLE
+                // Extract operations - using normalized ID for more robust matching
+                normalizedId.contains("extract") && normalizedId.contains("method") -> EXTRACT_METHOD
+                normalizedId.contains("extract") && normalizedId.contains("class") -> EXTRACT_CLASS
+                normalizedId.contains("extract") && normalizedId.contains("variable") -> EXTRACT_VARIABLE
+                normalizedId.contains("extract") && normalizedId.contains("constant") -> EXTRACT_CONSTANT
+                normalizedId.contains("extract") && normalizedId.contains("field") -> EXTRACT_FIELD
 
-                id.contains("extract", ignoreCase = true) && id.contains(
-                    "constant",
-                    ignoreCase = true
-                ) -> EXTRACT_CONSTANT
+                // Inline operations
+                normalizedId.contains("inline") && normalizedId.contains("method") -> INLINE_METHOD
 
-                id.contains("extract", ignoreCase = true) && id.contains("field", ignoreCase = true) -> EXTRACT_FIELD
-                id.contains("pullUp", ignoreCase = true) -> PULL_UP
-                id.contains("pushDown", ignoreCase = true) -> PUSH_DOWN
-                id.contains("encapsulate", ignoreCase = true) -> ENCAPSULATE_FIELD
-                id.contains("optimizeImports", ignoreCase = true) -> OPTIMIZE_IMPORTS
-                id.contains("reformatCode", ignoreCase = true) -> REFORMAT_CODE
-                id.contains("safeDelete", ignoreCase = true) -> SAFE_DELETE
+                // Move operations
+                normalizedId.contains("move") && normalizedId.contains("method") -> MOVE_METHOD
+                normalizedId.contains("move") && normalizedId.contains("class") -> MOVE_CLASS
+
+                // Rename & signature
+                normalizedId.contains("rename") -> RENAME
+                normalizedId.contains("changesignature") || normalizedId.contains("change_signature") -> CHANGE_SIGNATURE
+
+                // Parameter operations
+                normalizedId.contains("introduce") && normalizedId.contains("parameter") && normalizedId.contains("object") -> INTRODUCE_PARAMETER_OBJECT
+                normalizedId.contains("remove") && normalizedId.contains("parameter") -> REMOVE_PARAMETER
+
+                // Pull/Push operations
+                normalizedId.contains("pullup") || normalizedId.contains("pull_up") -> PULL_UP
+                normalizedId.contains("pushdown") || normalizedId.contains("push_down") -> PUSH_DOWN
+
+                // Conditional & logic operations
+                normalizedId.contains("replace") && normalizedId.contains("conditional") && normalizedId.contains("polymorphism") -> REPLACE_CONDITIONAL_WITH_POLYMORPHISM
+                normalizedId.contains("decompose") && normalizedId.contains("conditional") -> DECOMPOSE_CONDITIONAL
+                normalizedId.contains("consolidate") && normalizedId.contains("conditional") -> CONSOLIDATE_CONDITIONALS
+                normalizedId.contains("simplify") && normalizedId.contains("boolean") -> SIMPLIFY_BOOLEAN
+                normalizedId.contains("simplify") && normalizedId.contains("expression") -> SIMPLIFY_EXPRESSION
+
+                // Code cleanup
+                (normalizedId.contains("remove") && normalizedId.contains("dead")) || normalizedId.contains("deadcode") -> REMOVE_DEAD_CODE
+                normalizedId.contains("remove") && normalizedId.contains("unused") -> REMOVE_UNUSED
+                normalizedId.contains("safedelete") || normalizedId.contains("safe_delete") -> SAFE_DELETE
+
+                // Data operations
+                normalizedId.contains("encapsulate") && normalizedId.contains("field") -> ENCAPSULATE_FIELD
+                normalizedId.contains("replace") && normalizedId.contains("data") && normalizedId.contains("class") -> REPLACE_DATA_CLASS_WITH_OBJECT
+                normalizedId.contains("remove") && normalizedId.contains("setting") && normalizedId.contains("method") -> REMOVE_SETTING_METHOD
+                normalizedId.contains("introduce") && normalizedId.contains("value") && normalizedId.contains("object") -> INTRODUCE_VALUE_OBJECT
+
+                // Interface & coupling operations
+                (normalizedId.contains("extract") || normalizedId.contains("introduce")) && normalizedId.contains("interface") -> INTRODUCE_INTERFACE
+                normalizedId.contains("dependency") && normalizedId.contains("inversion") -> DEPENDENCY_INVERSION
+                normalizedId.contains("replace") && normalizedId.contains("inheritance") && normalizedId.contains("delegation") -> REPLACE_INHERITANCE_WITH_DELEGATION
+                (normalizedId.contains("break") && normalizedId.contains("cyclic")) || (normalizedId.contains("break") && normalizedId.contains("cycle")) -> BREAK_CYCLIC_DEPENDENCY
+
+                // Modernization
+                normalizedId.contains("convert") && normalizedId.contains("stream") -> CONVERT_TO_STREAM
+
+                // Formatting & imports
+                normalizedId.contains("optimize") && normalizedId.contains("import") -> OPTIMIZE_IMPORTS
+                normalizedId.contains("reformat") && normalizedId.contains("code") -> REFORMAT_CODE
+
                 else -> null
             }
         }
