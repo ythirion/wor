@@ -109,7 +109,7 @@ class RefactoringActionTypeTest : FunSpec({
             RefactoringActionType.fromIntellijId("IntroduceProperty") shouldBe RefactoringActionType.EXTRACT_FIELD
 
             // Inline & rename
-            RefactoringActionType.fromIntellijId("Inline") shouldBe RefactoringActionType.INLINE_METHOD
+            RefactoringActionType.fromIntellijId("InlineFunction") shouldBe RefactoringActionType.INLINE_METHOD
             RefactoringActionType.fromIntellijId("RenameElement") shouldBe RefactoringActionType.RENAME
 
             // Other operations
