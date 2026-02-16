@@ -118,8 +118,8 @@ class PlayerStateService : PersistentStateComponent<PlayerStateService.State> {
         )
     }
 
-    private fun calculateCategoryStats(actions: List<RefactoringAction>): Map<ActionCategory, CategoryStats> {
-        return ActionCategory.entries.associateWith { category ->
+    private fun calculateCategoryStats(actions: List<RefactoringAction>): Map<ActionCategory, CategoryStats> =
+        ActionCategory.entries.associateWith { category ->
             val categoryActions = actions.filter { it.category == category }
             val actionCounts = categoryActions.groupingBy { it.type }.eachCount()
             val mostUsed = actionCounts.maxByOrNull { it.value }?.key
@@ -131,7 +131,6 @@ class PlayerStateService : PersistentStateComponent<PlayerStateService.State> {
                 mostUsedAction = mostUsed
             )
         }
-    }
 
     fun addListener(listener: PlayerStateListener) {
         listeners.add(listener)
@@ -147,16 +146,14 @@ class PlayerStateService : PersistentStateComponent<PlayerStateService.State> {
         notifyListeners()
     }
 
-    private fun notifyListeners() {
-        val state = playerState()
+    private fun notifyListeners() =
         listeners.forEach { listener ->
             try {
-                listener.onStateChanged(state)
+                listener.onStateChanged(playerState())
             } catch (e: Exception) {
                 thisLogger().error("Error notifying listener", e)
             }
         }
-    }
 
     companion object {
         fun getInstance(): PlayerStateService =

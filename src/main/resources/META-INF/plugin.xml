@@ -31,7 +31,7 @@
     </projectListeners>
 
     <applicationListeners>
-        <listener class="com.yot.wor.listeners.RefactoringCommandListener"
-                  topic="com.intellij.openapi.command.CommandListener"/>
+        <listener class="com.yot.wor.listeners.RefactoringAnActionListener"
+                  topic="com.intellij.openapi.actionSystem.ex.AnActionListener"/>
     </applicationListeners>
 </idea-plugin>

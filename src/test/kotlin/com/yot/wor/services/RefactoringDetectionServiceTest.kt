@@ -154,4 +154,59 @@ class RefactoringDetectionServiceTest : BasePlatformTestCase() {
 
         service1 shouldBe service2
     }
+
+    fun `test should deduplicate same refactoring detected within short time window`() {
+        // Simulates the case where both RefactoringEventListener and AnActionListener
+        // detect the same refactoring (e.g., Change Signature in Kotlin)
+        val action = RefactoringAction(
+            type = RefactoringActionType.CHANGE_SIGNATURE,
+            fileName = "Test.kt"
+        )
+
+        // First detection (from RefactoringEventListener)
+        service.onRefactoringDetected(action)
+        service.allActions() shouldHaveSize 1
+
+        // Immediate duplicate (from AnActionListener) should be ignored
+        service.onRefactoringDetected(action)
+        service.allActions() shouldHaveSize 1
+
+        // Another duplicate 500ms later should still be ignored
+        Thread.sleep(500)
+        service.onRefactoringDetected(action)
+        service.allActions() shouldHaveSize 1
+    }
+
+    fun `test should allow same refactoring after deduplication window`() {
+        val action = RefactoringAction(
+            type = RefactoringActionType.RENAME,
+            fileName = "Test.kt"
+        )
+
+        service.onRefactoringDetected(action)
+        service.allActions() shouldHaveSize 1
+
+        // Wait for deduplication window to expire (1 second)
+        Thread.sleep(1100)
+
+        // Should be recorded as a new action
+        service.onRefactoringDetected(action)
+        service.allActions() shouldHaveSize 2
+    }
+
+    fun `test should not deduplicate different files`() {
+        val action1 = RefactoringAction(
+            type = RefactoringActionType.EXTRACT_METHOD,
+            fileName = "File1.kt"
+        )
+        val action2 = RefactoringAction(
+            type = RefactoringActionType.EXTRACT_METHOD,
+            fileName = "File2.kt"
+        )
+
+        service.onRefactoringDetected(action1)
+        service.onRefactoringDetected(action2)
+
+        service.allActions() shouldHaveSize 2
+    }
 }
