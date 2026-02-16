@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.0.6] - 2026-02-16
+
 ### Changed
 
 - Improve refactoring actions mapping
@@ -39,7 +41,8 @@
 - Initial scaffold created
   from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
-[Unreleased]: https://github.com/ythirion/wor/compare/0.0.5...HEAD
+[Unreleased]: https://github.com/ythirion/wor/compare/0.0.6...HEAD
+[0.0.6]: https://github.com/ythirion/wor/compare/0.0.5...0.0.6
 [0.0.5]: https://github.com/ythirion/wor/compare/0.0.4...0.0.5
 [0.0.4]: https://github.com/ythirion/wor/compare/0.0.3...0.0.4
 [0.0.3]: https://github.com/ythirion/wor/compare/0.0.1...0.0.3
