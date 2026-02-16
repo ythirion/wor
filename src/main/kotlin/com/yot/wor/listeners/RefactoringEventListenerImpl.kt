@@ -18,7 +18,9 @@ class RefactoringEventListenerImpl(private val project: Project) : RefactoringEv
     }
 
     override fun refactoringDone(refactoringId: String, afterData: RefactoringEventData?) {
-        thisLogger().info("Refactoring done: $refactoringId")
+        // Log with normalized ID to help debug Kotlin-specific refactorings
+        val normalizedId = refactoringId.lowercase().replace(".", "_").replace("-", "_")
+        thisLogger().info("Refactoring done: $refactoringId (normalized: $normalizedId)")
 
         val actionType = RefactoringActionType.fromIntellijId(refactoringId)
 

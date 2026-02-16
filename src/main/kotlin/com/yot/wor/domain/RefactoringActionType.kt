@@ -9,6 +9,7 @@ enum class RefactoringActionType(
     // A — Structure du code
     EXTRACT_METHOD("Extract Method", ActionCategory.STRUCTURE, 10, "🧪 Clarity"),
     INLINE_METHOD("Inline Method", ActionCategory.STRUCTURE, 8, "🗡️ Anti-boilerplate"),
+    INLINE_VARIABLE("Inline Variable", ActionCategory.STRUCTURE, 5, "🗡️ Anti-boilerplate"),
     EXTRACT_CLASS("Extract Class", ActionCategory.STRUCTURE, 15, "🏗️ Architecture"),
     MOVE_METHOD("Move Method", ActionCategory.STRUCTURE, 12, "🔀 Balance"),
     RENAME("Rename", ActionCategory.STRUCTURE, 5, "✨ Clarity"),
@@ -65,19 +66,39 @@ enum class RefactoringActionType(
             // Normalize the ID for easier matching
             val normalizedId = id.lowercase().replace(".", "_").replace("-", "_")
 
+            // Direct action ID mappings (used by AnActionListener for Kotlin)
+            return when (normalizedId) {
+                "extractfunction", "extractmethod" -> EXTRACT_METHOD
+                "introducefunction", "introducemethod" -> EXTRACT_METHOD
+                "introducevariable" -> EXTRACT_VARIABLE
+                "introduceconstant" -> EXTRACT_CONSTANT
+                "introduceproperty", "introducefield" -> EXTRACT_FIELD
+                "inlinevariable" -> INLINE_VARIABLE
+                "inlinefunction" -> INLINE_METHOD
+                "renameelement", "rename" -> RENAME
+                "changesignature" -> CHANGE_SIGNATURE
+                "move" -> MOVE_METHOD
+                "safedelete" -> SAFE_DELETE
+                "extractinterface" -> INTRODUCE_INTERFACE
+                else -> matchByPattern(normalizedId)
+            }
+        }
+
+        private fun matchByPattern(normalizedId: String): RefactoringActionType? {
             return when {
                 // Extract operations - using normalized ID for more robust matching
-                normalizedId.contains("extract") && normalizedId.contains("method") -> EXTRACT_METHOD
+                normalizedId.contains("extract") && (normalizedId.contains("method") || normalizedId.contains("function")) -> EXTRACT_METHOD
                 normalizedId.contains("extract") && normalizedId.contains("class") -> EXTRACT_CLASS
                 normalizedId.contains("extract") && normalizedId.contains("variable") -> EXTRACT_VARIABLE
                 normalizedId.contains("extract") && normalizedId.contains("constant") -> EXTRACT_CONSTANT
-                normalizedId.contains("extract") && normalizedId.contains("field") -> EXTRACT_FIELD
+                normalizedId.contains("extract") && (normalizedId.contains("field") || normalizedId.contains("property")) -> EXTRACT_FIELD
 
                 // Inline operations
-                normalizedId.contains("inline") && normalizedId.contains("method") -> INLINE_METHOD
+                normalizedId.contains("inline") && normalizedId.contains("variable") -> INLINE_VARIABLE
+                normalizedId.contains("inline") && (normalizedId.contains("method") || normalizedId.contains("function")) -> INLINE_METHOD
 
                 // Move operations
-                normalizedId.contains("move") && normalizedId.contains("method") -> MOVE_METHOD
+                normalizedId.contains("move") && (normalizedId.contains("method") || normalizedId.contains("function")) -> MOVE_METHOD
                 normalizedId.contains("move") && normalizedId.contains("class") -> MOVE_CLASS
 
                 // Rename & signature
@@ -105,9 +126,9 @@ enum class RefactoringActionType(
                 normalizedId.contains("safedelete") || normalizedId.contains("safe_delete") -> SAFE_DELETE
 
                 // Data operations
-                normalizedId.contains("encapsulate") && normalizedId.contains("field") -> ENCAPSULATE_FIELD
+                normalizedId.contains("encapsulate") && (normalizedId.contains("field") || normalizedId.contains("property")) -> ENCAPSULATE_FIELD
                 normalizedId.contains("replace") && normalizedId.contains("data") && normalizedId.contains("class") -> REPLACE_DATA_CLASS_WITH_OBJECT
-                normalizedId.contains("remove") && normalizedId.contains("setting") && normalizedId.contains("method") -> REMOVE_SETTING_METHOD
+                normalizedId.contains("remove") && normalizedId.contains("setting") && (normalizedId.contains("method") || normalizedId.contains("property")) -> REMOVE_SETTING_METHOD
                 normalizedId.contains("introduce") && normalizedId.contains("value") && normalizedId.contains("object") -> INTRODUCE_VALUE_OBJECT
 
                 // Interface & coupling operations

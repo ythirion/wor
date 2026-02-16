@@ -29,4 +29,9 @@
         <listener class="com.yot.wor.listeners.RefactoringEventListenerImpl"
                   topic="com.intellij.refactoring.listeners.RefactoringEventListener"/>
     </projectListeners>
+
+    <applicationListeners>
+        <listener class="com.yot.wor.listeners.RefactoringCommandListener"
+                  topic="com.intellij.openapi.command.CommandListener"/>
+    </applicationListeners>
 </idea-plugin>

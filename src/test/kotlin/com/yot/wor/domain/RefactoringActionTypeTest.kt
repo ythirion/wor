@@ -41,8 +41,25 @@ class RefactoringActionTypeTest : FunSpec({
             RefactoringActionType.fromIntellijId("ExtractMethod") shouldBe RefactoringActionType.EXTRACT_METHOD
         }
 
+        test("should map extract function correctly (Kotlin)") {
+            RefactoringActionType.fromIntellijId("refactoring.extractFunction") shouldBe RefactoringActionType.EXTRACT_METHOD
+            RefactoringActionType.fromIntellijId("refactoring.extract.function") shouldBe RefactoringActionType.EXTRACT_METHOD
+            RefactoringActionType.fromIntellijId("ExtractFunction") shouldBe RefactoringActionType.EXTRACT_METHOD
+        }
+
         test("should map inline method correctly") {
             RefactoringActionType.fromIntellijId("refactoring.inline.method") shouldBe RefactoringActionType.INLINE_METHOD
+        }
+
+        test("should map inline function correctly (Kotlin)") {
+            RefactoringActionType.fromIntellijId("refactoring.inline.function") shouldBe RefactoringActionType.INLINE_METHOD
+            RefactoringActionType.fromIntellijId("refactoring.inlineFunction") shouldBe RefactoringActionType.INLINE_METHOD
+        }
+
+        test("should map inline variable correctly") {
+            RefactoringActionType.fromIntellijId("refactoring.inline.variable") shouldBe RefactoringActionType.INLINE_VARIABLE
+            RefactoringActionType.fromIntellijId("InlineVariable") shouldBe RefactoringActionType.INLINE_VARIABLE
+            RefactoringActionType.fromIntellijId("refactoring.inlineVariable") shouldBe RefactoringActionType.INLINE_VARIABLE
         }
 
         test("should map rename correctly") {
@@ -54,8 +71,23 @@ class RefactoringActionTypeTest : FunSpec({
             RefactoringActionType.fromIntellijId("refactoring.move.method") shouldBe RefactoringActionType.MOVE_METHOD
         }
 
+        test("should map move function correctly (Kotlin)") {
+            RefactoringActionType.fromIntellijId("refactoring.move.function") shouldBe RefactoringActionType.MOVE_METHOD
+            RefactoringActionType.fromIntellijId("refactoring.moveFunction") shouldBe RefactoringActionType.MOVE_METHOD
+        }
+
         test("should map move class correctly") {
             RefactoringActionType.fromIntellijId("refactoring.move.class") shouldBe RefactoringActionType.MOVE_CLASS
+        }
+
+        test("should map extract property correctly (Kotlin)") {
+            RefactoringActionType.fromIntellijId("refactoring.extract.property") shouldBe RefactoringActionType.EXTRACT_FIELD
+            RefactoringActionType.fromIntellijId("refactoring.extractProperty") shouldBe RefactoringActionType.EXTRACT_FIELD
+        }
+
+        test("should map encapsulate property correctly (Kotlin)") {
+            RefactoringActionType.fromIntellijId("refactoring.encapsulate.property") shouldBe RefactoringActionType.ENCAPSULATE_FIELD
+            RefactoringActionType.fromIntellijId("refactoring.encapsulateProperty") shouldBe RefactoringActionType.ENCAPSULATE_FIELD
         }
 
         test("should return null for unknown refactoring ID") {
@@ -66,6 +98,24 @@ class RefactoringActionTypeTest : FunSpec({
             RefactoringActionType.fromIntellijId("RENAME") shouldBe RefactoringActionType.RENAME
             RefactoringActionType.fromIntellijId("rename") shouldBe RefactoringActionType.RENAME
             RefactoringActionType.fromIntellijId("ReName") shouldBe RefactoringActionType.RENAME
+        }
+
+        test("should map Kotlin action IDs (from AnActionListener)") {
+            // Extract operations
+            RefactoringActionType.fromIntellijId("ExtractFunction") shouldBe RefactoringActionType.EXTRACT_METHOD
+            RefactoringActionType.fromIntellijId("IntroduceFunction") shouldBe RefactoringActionType.EXTRACT_METHOD
+            RefactoringActionType.fromIntellijId("IntroduceVariable") shouldBe RefactoringActionType.EXTRACT_VARIABLE
+            RefactoringActionType.fromIntellijId("IntroduceConstant") shouldBe RefactoringActionType.EXTRACT_CONSTANT
+            RefactoringActionType.fromIntellijId("IntroduceProperty") shouldBe RefactoringActionType.EXTRACT_FIELD
+
+            // Inline & rename
+            RefactoringActionType.fromIntellijId("Inline") shouldBe RefactoringActionType.INLINE_METHOD
+            RefactoringActionType.fromIntellijId("RenameElement") shouldBe RefactoringActionType.RENAME
+
+            // Other operations
+            RefactoringActionType.fromIntellijId("ChangeSignature") shouldBe RefactoringActionType.CHANGE_SIGNATURE
+            RefactoringActionType.fromIntellijId("SafeDelete") shouldBe RefactoringActionType.SAFE_DELETE
+            RefactoringActionType.fromIntellijId("Move") shouldBe RefactoringActionType.MOVE_METHOD
         }
     }
 
