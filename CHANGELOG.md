@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Improve refactoring actions mapping
+
 ## [0.0.5] - 2026-02-12
 
 ### Changed
