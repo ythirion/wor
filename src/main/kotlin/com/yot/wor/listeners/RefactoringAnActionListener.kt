@@ -14,9 +14,6 @@ class RefactoringAnActionListener : AnActionListener {
     companion object {
         // Languages natively supported by RefactoringEventListener
         // For these languages, we skip AnActionListener detection to avoid duplicates
-        // Note: Some Kotlin refactorings (e.g., Change Signature) use the standard API
-        // and may still be detected by both listeners. A lightweight deduplication in
-        // RefactoringDetectionService handles these edge cases.
         private val NATIVELY_SUPPORTED_LANGUAGES = setOf(
             "JAVA",
             "JavaScript",
@@ -86,12 +83,13 @@ class RefactoringAnActionListener : AnActionListener {
 
             thisLogger().info("Action detected via AnActionListener: ${refactoringAction.type.displayName} in ${fileName ?: "unknown"} (${languageName ?: fileExtension ?: "unknown language"}) (+${refactoringAction.xpReward} XP)")
         } else
-            // Log unknown refactoring actions for debugging
+        // Log unknown refactoring actions for debugging
             if (actionId.contains("extract", ignoreCase = true) ||
                 actionId.contains("refactor", ignoreCase = true) ||
                 actionId.contains("inline", ignoreCase = true) ||
                 actionId.contains("introduce", ignoreCase = true) ||
-                actionId.contains("rename", ignoreCase = true)) {
+                actionId.contains("rename", ignoreCase = true)
+            ) {
                 thisLogger().warn("Unknown refactoring action ID: $actionId (language: ${languageName ?: fileExtension ?: "unknown"})")
             }
     }

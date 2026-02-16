@@ -63,47 +63,28 @@ enum class RefactoringActionType(
 
     companion object {
         fun fromIntellijId(id: String): RefactoringActionType? {
-            // Normalize the ID for easier matching
             val normalizedId = id.lowercase().replace(".", "_").replace("-", "_")
 
-            // Direct action ID mappings (used by AnActionListener for Kotlin)
-            return when (normalizedId) {
-                "extractfunction", "extractmethod" -> EXTRACT_METHOD
-                "introducefunction", "introducemethod" -> EXTRACT_METHOD
-                "introducevariable" -> EXTRACT_VARIABLE
-                "introduceconstant" -> EXTRACT_CONSTANT
-                "introduceproperty", "introducefield" -> EXTRACT_FIELD
-                "inlinevariable" -> INLINE_VARIABLE
-                "inlinefunction" -> INLINE_METHOD
-                "renameelement", "rename" -> RENAME
-                "changesignature" -> CHANGE_SIGNATURE
-                "move" -> MOVE_METHOD
-                "safedelete" -> SAFE_DELETE
-                "extractinterface" -> INTRODUCE_INTERFACE
-                else -> matchByPattern(normalizedId)
-            }
-        }
-
-        private fun matchByPattern(normalizedId: String): RefactoringActionType? {
             return when {
-                // Extract operations - using normalized ID for more robust matching
+                // Extract operations
+                normalizedId in listOf("extractfunction", "extractmethod", "introducefunction", "introducemethod") -> EXTRACT_METHOD
                 normalizedId.contains("extract") && (normalizedId.contains("method") || normalizedId.contains("function")) -> EXTRACT_METHOD
                 normalizedId.contains("extract") && normalizedId.contains("class") -> EXTRACT_CLASS
-                normalizedId.contains("extract") && normalizedId.contains("variable") -> EXTRACT_VARIABLE
-                normalizedId.contains("extract") && normalizedId.contains("constant") -> EXTRACT_CONSTANT
-                normalizedId.contains("extract") && (normalizedId.contains("field") || normalizedId.contains("property")) -> EXTRACT_FIELD
+                normalizedId == "introducevariable" || (normalizedId.contains("extract") && normalizedId.contains("variable")) -> EXTRACT_VARIABLE
+                normalizedId == "introduceconstant" || (normalizedId.contains("extract") && normalizedId.contains("constant")) -> EXTRACT_CONSTANT
+                normalizedId in listOf("introduceproperty", "introducefield") || (normalizedId.contains("extract") && (normalizedId.contains("field") || normalizedId.contains("property"))) -> EXTRACT_FIELD
 
                 // Inline operations
-                normalizedId.contains("inline") && normalizedId.contains("variable") -> INLINE_VARIABLE
-                normalizedId.contains("inline") && (normalizedId.contains("method") || normalizedId.contains("function")) -> INLINE_METHOD
+                normalizedId == "inlinevariable" || (normalizedId.contains("inline") && normalizedId.contains("variable")) -> INLINE_VARIABLE
+                normalizedId == "inlinefunction" || (normalizedId.contains("inline") && (normalizedId.contains("method") || normalizedId.contains("function"))) -> INLINE_METHOD
 
                 // Move operations
-                normalizedId.contains("move") && (normalizedId.contains("method") || normalizedId.contains("function")) -> MOVE_METHOD
+                normalizedId == "move" || (normalizedId.contains("move") && (normalizedId.contains("method") || normalizedId.contains("function"))) -> MOVE_METHOD
                 normalizedId.contains("move") && normalizedId.contains("class") -> MOVE_CLASS
 
                 // Rename & signature
-                normalizedId.contains("rename") -> RENAME
-                normalizedId.contains("changesignature") || normalizedId.contains("change_signature") -> CHANGE_SIGNATURE
+                normalizedId in listOf("renameelement", "rename") || normalizedId.contains("rename") -> RENAME
+                normalizedId == "changesignature" || normalizedId.contains("change_signature") -> CHANGE_SIGNATURE
 
                 // Parameter operations
                 normalizedId.contains("introduce") && normalizedId.contains("parameter") && normalizedId.contains("object") -> INTRODUCE_PARAMETER_OBJECT
@@ -121,9 +102,9 @@ enum class RefactoringActionType(
                 normalizedId.contains("simplify") && normalizedId.contains("expression") -> SIMPLIFY_EXPRESSION
 
                 // Code cleanup
+                normalizedId == "safedelete" || normalizedId.contains("safe_delete") -> SAFE_DELETE
                 (normalizedId.contains("remove") && normalizedId.contains("dead")) || normalizedId.contains("deadcode") -> REMOVE_DEAD_CODE
                 normalizedId.contains("remove") && normalizedId.contains("unused") -> REMOVE_UNUSED
-                normalizedId.contains("safedelete") || normalizedId.contains("safe_delete") -> SAFE_DELETE
 
                 // Data operations
                 normalizedId.contains("encapsulate") && (normalizedId.contains("field") || normalizedId.contains("property")) -> ENCAPSULATE_FIELD
@@ -132,7 +113,7 @@ enum class RefactoringActionType(
                 normalizedId.contains("introduce") && normalizedId.contains("value") && normalizedId.contains("object") -> INTRODUCE_VALUE_OBJECT
 
                 // Interface & coupling operations
-                (normalizedId.contains("extract") || normalizedId.contains("introduce")) && normalizedId.contains("interface") -> INTRODUCE_INTERFACE
+                normalizedId == "extractinterface" || ((normalizedId.contains("extract") || normalizedId.contains("introduce")) && normalizedId.contains("interface")) -> INTRODUCE_INTERFACE
                 normalizedId.contains("dependency") && normalizedId.contains("inversion") -> DEPENDENCY_INVERSION
                 normalizedId.contains("replace") && normalizedId.contains("inheritance") && normalizedId.contains("delegation") -> REPLACE_INHERITANCE_WITH_DELEGATION
                 (normalizedId.contains("break") && normalizedId.contains("cyclic")) || (normalizedId.contains("break") && normalizedId.contains("cycle")) -> BREAK_CYCLIC_DEPENDENCY
