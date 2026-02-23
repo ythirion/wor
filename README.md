@@ -6,6 +6,8 @@
 [![Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-blue.svg)](https://claude.ai/code)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+![Wor Demo](img/wor-demo.gif)
+
 <!-- Plugin description -->
 
 **World of Refactoring** transforms your IntelliJ IDEA refactoring workflow into an engaging experience! Earn XP, level
@@ -24,7 +26,7 @@ up, and complete quests as you improve your codebase.
     - 👑 **Grand Master** (Levels 30-50)
     - 🧙 **Legend** (Level 51+)
 
-### 📊 Comprehensive Action Tracking
+### Comprehensive Action Tracking
 
 Track your refactoring actions across 4 categories:
 
@@ -42,7 +44,7 @@ Supports 20+ refactoring types including:
 - Pull Up/Push Down
 - And many more!
 
-### 🎯 Quest System
+### Quest System
 
 Complete quests to earn bonus XP:
 
@@ -52,7 +54,7 @@ Complete quests to earn bonus XP:
 - **The Cleaner** - Clean up your codebase
 - **Refactoring Spree** - Show your dedication with consistent refactoring
 
-### 📈 Statistics Dashboard
+### Statistics Dashboard
 
 View detailed statistics in the dedicated tool window:
 
@@ -61,7 +63,7 @@ View detailed statistics in the dedicated tool window:
 - Breakdown by action category
 - Complete refactoring history
 
-### 🔔 Real-time Notifications
+### Real-time Notifications
 
 Get instant feedback when you:
 
@@ -69,7 +71,7 @@ Get instant feedback when you:
 - Level up and unlock new titles
 - Complete quests
 
-### 💾 Export Your Progress
+### Export Your Progress
 
 Export your statistics in multiple formats:
 
