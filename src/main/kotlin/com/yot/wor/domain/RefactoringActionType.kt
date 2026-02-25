@@ -10,120 +10,92 @@ enum class RefactoringActionType(
     EXTRACT_METHOD("Extract Method", ActionCategory.STRUCTURE, 10, "🧪 Clarity"),
     INLINE_METHOD("Inline Method", ActionCategory.STRUCTURE, 8, "🗡️ Anti-boilerplate"),
     INLINE_VARIABLE("Inline Variable", ActionCategory.STRUCTURE, 5, "🗡️ Anti-boilerplate"),
-    EXTRACT_CLASS("Extract Class", ActionCategory.STRUCTURE, 15, "🏗️ Architecture"),
     MOVE_METHOD("Move Method", ActionCategory.STRUCTURE, 12, "🔀 Balance"),
     RENAME("Rename", ActionCategory.STRUCTURE, 5, "✨ Clarity"),
     CHANGE_SIGNATURE("Change Signature", ActionCategory.STRUCTURE, 10, "🔧 Design"),
-    INTRODUCE_PARAMETER_OBJECT("Introduce Parameter Object", ActionCategory.STRUCTURE, 15, "🧳 Packing"),
     REMOVE_PARAMETER("Remove Parameter", ActionCategory.STRUCTURE, 8, "✂️ Simplicity"),
     EXTRACT_VARIABLE("Extract Variable", ActionCategory.STRUCTURE, 5, "🧪 Clarity"),
     EXTRACT_CONSTANT("Extract Constant", ActionCategory.STRUCTURE, 5, "🧪 Clarity"),
-    EXTRACT_FIELD("Extract Field", ActionCategory.STRUCTURE, 8, "🧪 Clarity"),
-    PULL_UP("Pull Up", ActionCategory.STRUCTURE, 12, "🏗️ Architecture"),
-    PUSH_DOWN("Push Down", ActionCategory.STRUCTURE, 12, "🏗️ Architecture"),
+    SAFE_DELETE("Safe Delete", ActionCategory.STRUCTURE, 5, "🗑️ Safe Remover"),
+    MOVE_CLASS("Move Class", ActionCategory.STRUCTURE, 12, "🔀 Organizer"),
 
     // B — Logique & complexité
-    REPLACE_CONDITIONAL_WITH_POLYMORPHISM(
-        "Replace Conditional with Polymorphism",
-        ActionCategory.LOGIC,
-        20,
-        "🐍 Hydra Slayer"
-    ),
-    DECOMPOSE_CONDITIONAL("Decompose Conditional", ActionCategory.LOGIC, 12, "🧩 Clarity"),
-    CONSOLIDATE_CONDITIONALS("Consolidate Conditionals", ActionCategory.LOGIC, 10, "👯 Deduplicator"),
     REMOVE_DEAD_CODE("Remove Dead Code", ActionCategory.LOGIC, 8, "🧟 Zombie Hunter"),
-    SIMPLIFY_BOOLEAN("Simplify Boolean", ActionCategory.LOGIC, 8, "🧠 Logic Master"),
 
     // C — Données & état
-    ENCAPSULATE_FIELD("Encapsulate Field", ActionCategory.DATA, 10, "🔒 Protector"),
-    REPLACE_DATA_CLASS_WITH_OBJECT("Replace Data Class with Object", ActionCategory.DATA, 15, "📦 Enricher"),
-    REMOVE_SETTING_METHOD("Remove Setting Method", ActionCategory.DATA, 10, "🔐 Immutability"),
-    INTRODUCE_VALUE_OBJECT("Introduce Value Object", ActionCategory.DATA, 15, "💎 Value Creator"),
-
-    // D — Couplage
-    INTRODUCE_INTERFACE("Introduce Interface", ActionCategory.COUPLING, 15, "🔗 Decoupler"),
-    DEPENDENCY_INVERSION("Dependency Inversion", ActionCategory.COUPLING, 20, "🔗 Inverter"),
-    REPLACE_INHERITANCE_WITH_DELEGATION(
-        "Replace Inheritance with Delegation",
-        ActionCategory.COUPLING,
-        18,
-        "🔗 Delegator"
-    ),
-    BREAK_CYCLIC_DEPENDENCY("Break Cyclic Dependency", ActionCategory.COUPLING, 25, "🌀 Cycle Breaker"),
-
-    // Nettoyage (Section 3)
-    OPTIMIZE_IMPORTS("Optimize Imports", ActionCategory.STRUCTURE, 2, "🧹 Cleaner"),
-    REFORMAT_CODE("Reformat Code", ActionCategory.STRUCTURE, 3, "🎨 Formatter"),
-    REMOVE_UNUSED("Remove Unused", ActionCategory.STRUCTURE, 5, "🗑️ Janitor"),
-    CONVERT_TO_STREAM("Convert to Stream", ActionCategory.LOGIC, 10, "🌊 Modernizer"),
-    SIMPLIFY_EXPRESSION("Simplify Expression", ActionCategory.LOGIC, 8, "🧠 Simplifier"),
-
-    SAFE_DELETE("Safe Delete", ActionCategory.STRUCTURE, 5, "🗑️ Safe Remover"),
-    MOVE_CLASS("Move Class", ActionCategory.STRUCTURE, 12, "🔀 Organizer");
+    ENCAPSULATE_FIELD("Encapsulate Field", ActionCategory.DATA, 10, "🔒 Protector");
 
     companion object {
+        /**
+         * Exact WebStorm and IntelliJ IDEA action IDs.
+         * Checked first before keyword fallback.
+         * Collision notes:
+         *   - refactoring.safeDelete → SAFE_DELETE (shared with REMOVE_PARAMETER & REMOVE_DEAD_CODE)
+         *   - refactoring.javascript.es6.moveModule → MOVE_METHOD (shared with MOVE_CLASS in WebStorm)
+         */
+        val EXACT_IDS: Map<String, RefactoringActionType> = mapOf(
+            // WebStorm
+            "refactoring.javascript.extractMethod" to EXTRACT_METHOD,
+            "refactoring.javascript.inline.method" to INLINE_METHOD,
+            "refactoring.javascript.inline" to INLINE_VARIABLE,
+            "refactoring.javascript.es6.moveModule" to MOVE_METHOD,
+            "refactoring.inplace.rename" to RENAME,
+            "refactoring.rename" to RENAME,
+            "refactoring.javascript.change.signature" to CHANGE_SIGNATURE,
+            "refactoring.safeDelete" to SAFE_DELETE,
+            "refactoring.javascript.introduceVariable" to EXTRACT_VARIABLE,
+            "refactoring.javascript.introduceConstant" to EXTRACT_CONSTANT,
+            // IntelliJ IDEA
+            "refactoring.extract.method" to EXTRACT_METHOD,
+            "refactoring.inline.method" to INLINE_METHOD,
+            "refactoring.inline.local.variable" to INLINE_VARIABLE,
+            "refactoring.move.members" to MOVE_METHOD,
+            "refactoring.changeSignature" to CHANGE_SIGNATURE,
+            "refactoring.extractVariable" to EXTRACT_VARIABLE,
+            "refactoring.extractConstant" to EXTRACT_CONSTANT,
+            "refactoring.encapsulateFields" to ENCAPSULATE_FIELD,
+            "refactoring.move" to MOVE_CLASS,
+        )
+
         fun fromIntellijId(id: String): RefactoringActionType? {
-            val normalizedId = id.lowercase().replace(".", "_").replace("-", "_")
+            EXACT_IDS[id]?.let { return it }
 
+            val lower = id.lowercase()
             return when {
-                // Extract operations
-                normalizedId in listOf("extractfunction", "extractmethod", "introducefunction", "introducemethod") -> EXTRACT_METHOD
-                normalizedId.contains("extract") && (normalizedId.contains("method") || normalizedId.contains("function")) -> EXTRACT_METHOD
-                normalizedId.contains("extract") && normalizedId.contains("class") -> EXTRACT_CLASS
-                normalizedId == "introducevariable" || (normalizedId.contains("extract") && normalizedId.contains("variable")) -> EXTRACT_VARIABLE
-                normalizedId == "introduceconstant" || (normalizedId.contains("extract") && normalizedId.contains("constant")) -> EXTRACT_CONSTANT
-                normalizedId in listOf("introduceproperty", "introducefield") || (normalizedId.contains("extract") && (normalizedId.contains("field") || normalizedId.contains("property"))) -> EXTRACT_FIELD
+                lower.contains("extractfunction") || lower.contains("introducefunction") || lower.contains("introducemethod")
+                        || (lower.contains("extract") && (lower.contains("method") || lower.contains("function")))
+                    -> EXTRACT_METHOD
 
-                // Inline operations
-                normalizedId == "inlinevariable" || (normalizedId.contains("inline") && normalizedId.contains("variable")) -> INLINE_VARIABLE
-                normalizedId == "inlinefunction" || (normalizedId.contains("inline") && (normalizedId.contains("method") || normalizedId.contains("function"))) -> INLINE_METHOD
+                lower.contains("extractvariable") || lower.contains("introducevariable")
+                        || (lower.contains("extract") && lower.contains("variable"))
+                    -> EXTRACT_VARIABLE
 
-                // Move operations
-                normalizedId == "move" || (normalizedId.contains("move") && (normalizedId.contains("method") || normalizedId.contains("function"))) -> MOVE_METHOD
-                normalizedId.contains("move") && normalizedId.contains("class") -> MOVE_CLASS
+                lower.contains("extractconstant") || lower.contains("introduceconstant")
+                        || (lower.contains("extract") && lower.contains("constant"))
+                    -> EXTRACT_CONSTANT
 
-                // Rename & signature
-                normalizedId in listOf("renameelement", "rename") || normalizedId.contains("rename") -> RENAME
-                normalizedId == "changesignature" || normalizedId.contains("change_signature") -> CHANGE_SIGNATURE
+                lower.contains("inlinevariable") || (lower.contains("inline") && lower.contains("variable"))
+                    -> INLINE_VARIABLE
 
-                // Parameter operations
-                normalizedId.contains("introduce") && normalizedId.contains("parameter") && normalizedId.contains("object") -> INTRODUCE_PARAMETER_OBJECT
-                normalizedId.contains("remove") && normalizedId.contains("parameter") -> REMOVE_PARAMETER
+                lower.contains("inlinefunction") || lower.contains("inlinemethod")
+                        || (lower.contains("inline") && (lower.contains("method") || lower.contains("function")))
+                    -> INLINE_METHOD
 
-                // Pull/Push operations
-                normalizedId.contains("pullup") || normalizedId.contains("pull_up") -> PULL_UP
-                normalizedId.contains("pushdown") || normalizedId.contains("push_down") -> PUSH_DOWN
+                lower.contains("move") && lower.contains("class") -> MOVE_CLASS
+                lower == "move" || (lower.contains("move") && (lower.contains("method") || lower.contains("function")))
+                    -> MOVE_METHOD
 
-                // Conditional & logic operations
-                normalizedId.contains("replace") && normalizedId.contains("conditional") && normalizedId.contains("polymorphism") -> REPLACE_CONDITIONAL_WITH_POLYMORPHISM
-                normalizedId.contains("decompose") && normalizedId.contains("conditional") -> DECOMPOSE_CONDITIONAL
-                normalizedId.contains("consolidate") && normalizedId.contains("conditional") -> CONSOLIDATE_CONDITIONALS
-                normalizedId.contains("simplify") && normalizedId.contains("boolean") -> SIMPLIFY_BOOLEAN
-                normalizedId.contains("simplify") && normalizedId.contains("expression") -> SIMPLIFY_EXPRESSION
+                lower.contains("renameelement") || lower.contains("rename") -> RENAME
 
-                // Code cleanup
-                normalizedId == "safedelete" || normalizedId.contains("safe_delete") -> SAFE_DELETE
-                (normalizedId.contains("remove") && normalizedId.contains("dead")) || normalizedId.contains("deadcode") -> REMOVE_DEAD_CODE
-                normalizedId.contains("remove") && normalizedId.contains("unused") -> REMOVE_UNUSED
+                lower.contains("changesignature") || (lower.contains("change") && lower.contains("signature"))
+                    -> CHANGE_SIGNATURE
 
-                // Data operations
-                normalizedId.contains("encapsulate") && (normalizedId.contains("field") || normalizedId.contains("property")) -> ENCAPSULATE_FIELD
-                normalizedId.contains("replace") && normalizedId.contains("data") && normalizedId.contains("class") -> REPLACE_DATA_CLASS_WITH_OBJECT
-                normalizedId.contains("remove") && normalizedId.contains("setting") && (normalizedId.contains("method") || normalizedId.contains("property")) -> REMOVE_SETTING_METHOD
-                normalizedId.contains("introduce") && normalizedId.contains("value") && normalizedId.contains("object") -> INTRODUCE_VALUE_OBJECT
+                lower.contains("remove") && lower.contains("dead") -> REMOVE_DEAD_CODE
+                lower.contains("remove") && lower.contains("param") -> REMOVE_PARAMETER
+                lower.contains("safedelete") || lower.contains("safe_delete") -> SAFE_DELETE
 
-                // Interface & coupling operations
-                normalizedId == "extractinterface" || ((normalizedId.contains("extract") || normalizedId.contains("introduce")) && normalizedId.contains("interface")) -> INTRODUCE_INTERFACE
-                normalizedId.contains("dependency") && normalizedId.contains("inversion") -> DEPENDENCY_INVERSION
-                normalizedId.contains("replace") && normalizedId.contains("inheritance") && normalizedId.contains("delegation") -> REPLACE_INHERITANCE_WITH_DELEGATION
-                (normalizedId.contains("break") && normalizedId.contains("cyclic")) || (normalizedId.contains("break") && normalizedId.contains("cycle")) -> BREAK_CYCLIC_DEPENDENCY
-
-                // Modernization
-                normalizedId.contains("convert") && normalizedId.contains("stream") -> CONVERT_TO_STREAM
-
-                // Formatting & imports
-                normalizedId.contains("optimize") && normalizedId.contains("import") -> OPTIMIZE_IMPORTS
-                normalizedId.contains("reformat") && normalizedId.contains("code") -> REFORMAT_CODE
+                lower.contains("encapsulate") && (lower.contains("field") || lower.contains("property"))
+                    -> ENCAPSULATE_FIELD
 
                 else -> null
             }

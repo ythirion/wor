@@ -163,13 +163,13 @@ class QuestService : PersistentStateComponent<QuestService.State> {
             Quest(
                 id = UUID.randomUUID().toString(),
                 title = "Spring Cleaning",
-                description = "Clean your code with 20 cleanup actions",
+                description = "Clean your code by removing dead code and safely deleting unused elements",
                 category = QuestCategory.CLEANUP,
                 xpReward = 250,
                 difficulty = QuestDifficulty.MEDIUM,
                 objectives = listOf(
-                    QuestObjective("Optimize Imports", targetCount = 10),
-                    QuestObjective("Reformat Code", targetCount = 10)
+                    QuestObjective("Remove Dead Code × 5", targetCount = 5),
+                    QuestObjective("Safe Delete × 5", targetCount = 5)
                 )
             )
         )
@@ -184,7 +184,7 @@ class QuestService : PersistentStateComponent<QuestService.State> {
                 xpReward = 500,
                 difficulty = QuestDifficulty.HARD,
                 objectives = listOf(
-                    QuestObjective("Extract Class × 3", targetCount = 3),
+                    QuestObjective("Move Class × 3", targetCount = 3),
                     QuestObjective("Move Method × 5", targetCount = 5)
                 )
             )
@@ -262,24 +262,18 @@ class QuestService : PersistentStateComponent<QuestService.State> {
             ) && action.type == RefactoringActionType.EXTRACT_METHOD -> true
 
             objective.description.contains(
-                "Extract Class",
-                ignoreCase = true
-            ) && action.type == RefactoringActionType.EXTRACT_CLASS -> true
-
-            objective.description.contains(
                 "Move Method",
                 ignoreCase = true
             ) && action.type == RefactoringActionType.MOVE_METHOD -> true
 
-            objective.description.contains(
-                "Optimize Imports",
-                ignoreCase = true
-            ) && action.type == RefactoringActionType.OPTIMIZE_IMPORTS -> true
+            objective.description.contains("Move Class", ignoreCase = true)
+                && action.type == RefactoringActionType.MOVE_CLASS -> true
 
-            objective.description.contains(
-                "Reformat",
-                ignoreCase = true
-            ) && action.type == RefactoringActionType.REFORMAT_CODE -> true
+            objective.description.contains("Remove Dead Code", ignoreCase = true)
+                && action.type == RefactoringActionType.REMOVE_DEAD_CODE -> true
+
+            objective.description.contains("Safe Delete", ignoreCase = true)
+                && action.type == RefactoringActionType.SAFE_DELETE -> true
 
             else -> false
         }

@@ -48,16 +48,16 @@ class PlayerStateServiceTest : BasePlatformTestCase() {
     fun `test multiple actions should accumulate XP`() {
         service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.EXTRACT_METHOD), project) // 10 XP
         service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.RENAME), project) // 5 XP
-        service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.EXTRACT_CLASS), project) // 15 XP
+        service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.MOVE_METHOD), project) // 12 XP
 
         val state = service.playerState()
-        state.totalXP shouldBe 30
+        state.totalXP shouldBe 27
         state.actionsHistory shouldHaveSize 3
     }
 
     fun `test should level up when reaching XP threshold`() {
-        repeat(15) {
-            service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.EXTRACT_CLASS), project) // 15 XP each
+        repeat(20) {
+            service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.MOVE_METHOD), project) // 12 XP each
         }
 
         val state = service.playerState()
@@ -112,7 +112,7 @@ class PlayerStateServiceTest : BasePlatformTestCase() {
     fun `test should calculate category statistics`() {
         service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.EXTRACT_METHOD), project)
         service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.RENAME), project)
-        service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.SIMPLIFY_BOOLEAN), project)
+        service.addRefactoringAction(RefactoringAction(type = RefactoringActionType.REMOVE_DEAD_CODE), project)
 
         val state = service.playerState()
         val structureStats = state.statisticsByCategory[ActionCategory.STRUCTURE]
@@ -122,7 +122,7 @@ class PlayerStateServiceTest : BasePlatformTestCase() {
         structureStats?.actionCount shouldBe 2 // EXTRACT_METHOD + RENAME
 
         logicStats shouldNotBe null
-        logicStats?.actionCount shouldBe 1 // SIMPLIFY_BOOLEAN
+        logicStats?.actionCount shouldBe 1 // REMOVE_DEAD_CODE
     }
 
     fun `test should track most used action per category`() {
@@ -182,7 +182,7 @@ class PlayerStateServiceTest : BasePlatformTestCase() {
         Thread.sleep(5)
         val action2 = RefactoringAction(type = RefactoringActionType.EXTRACT_METHOD, fileName = "File2.kt")
         Thread.sleep(5)
-        val action3 = RefactoringAction(type = RefactoringActionType.SIMPLIFY_BOOLEAN, fileName = "File3.kt")
+        val action3 = RefactoringAction(type = RefactoringActionType.REMOVE_DEAD_CODE, fileName = "File3.kt")
 
         service.addRefactoringAction(action1, project)
         service.addRefactoringAction(action2, project)

@@ -47,7 +47,7 @@ class RefactoringActionTest : FunSpec({
         val structureAction = RefactoringAction(type = RefactoringActionType.EXTRACT_METHOD)
         structureAction.category shouldBe ActionCategory.STRUCTURE
 
-        val logicAction = RefactoringAction(type = RefactoringActionType.SIMPLIFY_BOOLEAN)
+        val logicAction = RefactoringAction(type = RefactoringActionType.REMOVE_DEAD_CODE)
         logicAction.category shouldBe ActionCategory.LOGIC
     }
 

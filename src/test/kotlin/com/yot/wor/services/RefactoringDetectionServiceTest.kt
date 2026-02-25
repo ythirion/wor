@@ -47,9 +47,9 @@ class RefactoringDetectionServiceTest : BasePlatformTestCase() {
     fun `test should calculate total XP correctly`() {
         service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.EXTRACT_METHOD)) // 10 XP
         service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.RENAME)) // 5 XP
-        service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.EXTRACT_CLASS)) // 15 XP
+        service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.MOVE_METHOD)) // 12 XP
 
-        service.totalXP() shouldBe 30
+        service.totalXP() shouldBe 27
     }
 
     fun `test getRecentActions should return last N actions`() {
@@ -129,7 +129,7 @@ class RefactoringDetectionServiceTest : BasePlatformTestCase() {
     fun `test should track multiple action types`() {
         service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.EXTRACT_METHOD))
         service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.RENAME))
-        service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.SIMPLIFY_BOOLEAN))
+        service.onRefactoringDetected(RefactoringAction(type = RefactoringActionType.REMOVE_DEAD_CODE))
 
         val actions = service.allActions()
         actions shouldHaveSize 3
