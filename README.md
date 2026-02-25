@@ -192,24 +192,21 @@ Different refactoring actions provide different XP amounts based on their comple
 
 The plugin uses exact IDE action IDs (priority 1) and keyword fallback for other IDEs (priority 2).
 
-| Refactoring | WebStorm ID | IntelliJ IDEA ID | Keyword fallback |
-|---|---|---|---|
-| Extract Method | `refactoring.javascript.extractMethod` | `refactoring.extract.method` | `extract` + `method/function`, `ExtractFunction`, `IntroduceFunction` |
-| Inline Method | `refactoring.javascript.inline.method` | `refactoring.inline.method` | `inline` + `method/function`, `InlineFunction` |
-| Inline Variable | `refactoring.javascript.inline` | `refactoring.inline.local.variable` | `inline` + `variable`, `InlineVariable` |
-| Move Method | `refactoring.javascript.es6.moveModule`† | `refactoring.move.members` | `move` + `method/function`, `Move` |
-| Move Class | `refactoring.javascript.es6.moveModule`† | `refactoring.move` | `move` + `class` |
-| Rename | `refactoring.inplace.rename`, `refactoring.rename` | same | `rename`, `RenameElement` |
-| Change Signature | `refactoring.javascript.change.signature` | `refactoring.changeSignature` | `ChangeSignature`, `change` + `signature` |
-| Remove Parameter | `refactoring.safeDelete`‡ | `refactoring.safeDelete`‡ | `remove` + `param` |
-| Extract Variable | `refactoring.javascript.introduceVariable` | `refactoring.extractVariable` | `extract/introduce` + `variable`, `IntroduceVariable` |
-| Extract Constant | `refactoring.javascript.introduceConstant` | `refactoring.extractConstant` | `extract/introduce` + `constant`, `IntroduceConstant` |
-| Remove Dead Code | `refactoring.safeDelete`‡ | `refactoring.safeDelete`‡ | `remove` + `dead` |
-| Encapsulate Field | _(not available)_ | `refactoring.encapsulateFields` | `encapsulate` + `field/property` |
-| Safe Delete | `refactoring.safeDelete` | `refactoring.safeDelete` | `SafeDelete`, `safe_delete` |
-
-† WebStorm uses the same ID for Move Method and Move Class; the plugin maps it to **Move Method**. Move Class is distinguished via IntelliJ's `refactoring.move`.
-‡ Remove Parameter, Remove Dead Code, and Safe Delete share the same IDE action ID. The plugin maps `refactoring.safeDelete` to **Safe Delete**. The other two are reachable only via keyword fallback for other IDEs.
+| Refactoring       | WebStorm ID                                        | IntelliJ IDEA ID                    | Keyword fallback                                                      |
+|-------------------|----------------------------------------------------|-------------------------------------|-----------------------------------------------------------------------|
+| Extract Method    | `refactoring.javascript.extractMethod`             | `refactoring.extract.method`        | `extract` + `method/function`, `ExtractFunction`, `IntroduceFunction` |
+| Inline Method     | `refactoring.javascript.inline.method`             | `refactoring.inline.method`         | `inline` + `method/function`, `InlineFunction`                        |
+| Inline Variable   | `refactoring.javascript.inline`                    | `refactoring.inline.local.variable` | `inline` + `variable`, `InlineVariable`                               |
+| Move Method       | `refactoring.javascript.es6.moveModule`†           | `refactoring.move.members`          | `move` + `method/function`, `Move`                                    |
+| Move Class        | `refactoring.javascript.es6.moveModule`†           | `refactoring.move`                  | `move` + `class`                                                      |
+| Rename            | `refactoring.inplace.rename`, `refactoring.rename` | same                                | `rename`, `RenameElement`                                             |
+| Change Signature  | `refactoring.javascript.change.signature`          | `refactoring.changeSignature`       | `ChangeSignature`, `change` + `signature`                             |
+| Remove Parameter  | `refactoring.safeDelete`‡                          | `refactoring.safeDelete`‡           | `remove` + `param`                                                    |
+| Extract Variable  | `refactoring.javascript.introduceVariable`         | `refactoring.extractVariable`       | `extract/introduce` + `variable`, `IntroduceVariable`                 |
+| Extract Constant  | `refactoring.javascript.introduceConstant`         | `refactoring.extractConstant`       | `extract/introduce` + `constant`, `IntroduceConstant`                 |
+| Remove Dead Code  | `refactoring.safeDelete`‡                          | `refactoring.safeDelete`‡           | `remove` + `dead`                                                     |
+| Encapsulate Field | _(not available)_                                  | `refactoring.encapsulateFields`     | `encapsulate` + `field/property`                                      |
+| Safe Delete       | `refactoring.safeDelete`                           | `refactoring.safeDelete`            | `SafeDelete`, `safe_delete`                                           |
 
 ## Development
 
