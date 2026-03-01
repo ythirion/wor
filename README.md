@@ -49,10 +49,9 @@ Supports 20+ refactoring types including:
 Complete quests to earn bonus XP:
 
 - **First Steps** - Perform your first 5 refactoring actions
-- **Extract Master** - Master the Extract Method refactoring
+- **Extract Expert** - Master the Extract Method refactoring
 - **Rename Champion** - Become proficient at renaming
-- **The Cleaner** - Clean up your codebase
-- **Refactoring Spree** - Show your dedication with consistent refactoring
+- **Spring Cleaning** - Clean up your codebase
 
 ### Statistics Dashboard
 
@@ -73,17 +72,13 @@ Get instant feedback when you:
 
 ### Export Your Progress
 
-Export your statistics in multiple formats:
-
-- **JSON** - For data analysis and integration
-- **CSV** - For spreadsheet analysis
-- **Markdown** - Beautiful formatted reports with level icons
+Export your statistics in `Markdown`: formatted reports with level icons.
 
 ## Installation
 
 1. Open IntelliJ IDEA
 2. Go to `Settings` → `Plugins` → `Marketplace`
-3. Search for "World of Refactoring"
+3. Search for `World of Refactoring`
 4. Click `Install` and restart your IDE
 
 ## Usage
@@ -185,7 +180,6 @@ Different refactoring actions provide different XP amounts based on their comple
 - **Inline Method**: 8 XP
 - **Move/Copy**: 7 XP
 - **Change Signature**: 12 XP
-- **Pull Up/Push Down**: 15 XP
 - And more!
 
 ## Supported Refactoring Actions
