@@ -174,6 +174,22 @@ class QuestService : PersistentStateComponent<QuestService.State> {
             )
         )
 
+        // Chunking Master
+        addQuest(
+            Quest(
+                id = UUID.randomUUID().toString(),
+                title = "Chunking Master",
+                description = "Chunk your code to make it more cognitive friendly",
+                category = QuestCategory.REFACTORING,
+                xpReward = 4000,
+                difficulty = QuestDifficulty.HARD,
+                objectives = listOf(
+                    QuestObjective("Extract Method × 50", targetCount = 50),
+                    QuestObjective("Rename 50 elements", targetCount = 50)
+                )
+            )
+        )
+
         // Architecture quest
         addQuest(
             Quest(
@@ -267,13 +283,13 @@ class QuestService : PersistentStateComponent<QuestService.State> {
             ) && action.type == RefactoringActionType.MOVE_METHOD -> true
 
             objective.description.contains("Move Class", ignoreCase = true)
-                && action.type == RefactoringActionType.MOVE_CLASS -> true
+                    && action.type == RefactoringActionType.MOVE_CLASS -> true
 
             objective.description.contains("Remove Dead Code", ignoreCase = true)
-                && action.type == RefactoringActionType.REMOVE_DEAD_CODE -> true
+                    && action.type == RefactoringActionType.REMOVE_DEAD_CODE -> true
 
             objective.description.contains("Safe Delete", ignoreCase = true)
-                && action.type == RefactoringActionType.SAFE_DELETE -> true
+                    && action.type == RefactoringActionType.SAFE_DELETE -> true
 
             else -> false
         }
