@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Bug fix for latest version
+
 ## [0.1.1] - 2026-03-04
 
 ### Added
@@ -61,11 +65,19 @@
   from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
 
 [Unreleased]: https://github.com/ythirion/wor/compare/0.1.1...HEAD
+
 [0.1.1]: https://github.com/ythirion/wor/compare/0.1.0...0.1.1
+
 [0.1.0]: https://github.com/ythirion/wor/compare/0.0.7...0.1.0
+
 [0.0.7]: https://github.com/ythirion/wor/compare/0.0.6...0.0.7
+
 [0.0.6]: https://github.com/ythirion/wor/compare/0.0.5...0.0.6
+
 [0.0.5]: https://github.com/ythirion/wor/compare/0.0.4...0.0.5
+
 [0.0.4]: https://github.com/ythirion/wor/compare/0.0.3...0.0.4
+
 [0.0.3]: https://github.com/ythirion/wor/compare/0.0.1...0.0.3
+
 [0.0.1]: https://github.com/ythirion/wor/commits/0.0.1

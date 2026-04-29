@@ -13,17 +13,11 @@
         <notificationGroup id="WoR Notifications"
                            displayType="BALLOON"
                            isLogByDefault="false"/>
+        <applicationService serviceImplementation="com.yot.wor.services.PlayerStateService"/>
+        <applicationService serviceImplementation="com.yot.wor.services.QuestService"/>
+        <projectService serviceImplementation="com.yot.wor.services.RefactoringDetectionService"/>
+        <projectService serviceImplementation="com.yot.wor.settings.WoRSettings"/>
     </extensions>
-
-    <applicationServices>
-        <service serviceImplementation="com.yot.wor.services.PlayerStateService"/>
-        <service serviceImplementation="com.yot.wor.services.QuestService"/>
-    </applicationServices>
-
-    <projectServices>
-        <service serviceImplementation="com.yot.wor.services.RefactoringDetectionService"/>
-        <service serviceImplementation="com.yot.wor.settings.WoRSettings"/>
-    </projectServices>
 
     <projectListeners>
         <listener class="com.yot.wor.listeners.RefactoringEventListenerImpl"

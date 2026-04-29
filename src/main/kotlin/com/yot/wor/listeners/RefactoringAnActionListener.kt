@@ -5,7 +5,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.AnActionResult
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.ex.AnActionListener
+import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.diagnostic.thisLogger
+import com.intellij.psi.PsiFile
 import com.yot.wor.domain.RefactoringAction
 import com.yot.wor.domain.RefactoringActionType
 import com.yot.wor.services.RefactoringDetectionService
@@ -49,7 +51,7 @@ class RefactoringAnActionListener : AnActionListener {
         // Check if this is a natively supported language
         // If yes, RefactoringEventListener will handle it
         val virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE)
-        val psiFile = event.getData(CommonDataKeys.PSI_FILE)
+        val psiFile = ReadAction.compute<PsiFile?, RuntimeException> { event.getData(CommonDataKeys.PSI_FILE) }
 
         val fileExtension = virtualFile?.extension
         val languageName = psiFile?.language?.displayName
@@ -70,7 +72,7 @@ class RefactoringAnActionListener : AnActionListener {
         if (actionType != null) {
             val fileName = virtualFile?.name ?: psiFile?.name
 
-            val elementName = event.getData(CommonDataKeys.PSI_ELEMENT)?.text?.take(50)
+            val elementName = ReadAction.compute<String?, RuntimeException> { event.getData(CommonDataKeys.PSI_ELEMENT)?.text?.take(50) }
 
             val refactoringAction = RefactoringAction(
                 type = actionType,
