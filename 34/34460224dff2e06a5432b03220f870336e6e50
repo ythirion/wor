@@ -1,0 +1,32 @@
+CHANGELOG.md
+  h_1842ce48583c63 7
+gradle.properties
+  h_1842ce48583c63 6
+src/main/kotlin/com/yot/wor/listeners/RefactoringAnActionListener.kt
+  a3d1975fb0c0b6e7 10,22,29,31-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "3434460224dff2e06a5432b03220f870336e6e50",
+  "prompts": {
+    "a3d1975fb0c0b6e7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "7ec9781f-7f41-4ba5-8e38-4a5e255434fb",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Yoan Thirion",
+      "messages": [],
+      "total_additions": 18,
+      "total_deletions": 75,
+      "accepted_lines": 17,
+      "overriden_lines": 0
+    }
+  },
+  "humans": {
+    "h_1842ce48583c63": {
+      "author": "Yoan Thirion"
+    }
+  }
+}
