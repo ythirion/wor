@@ -7,92 +7,40 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.ex.AnActionListener
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.diagnostic.thisLogger
-import com.intellij.psi.PsiFile
+import com.intellij.openapi.vfs.VirtualFile
 import com.yot.wor.domain.RefactoringAction
 import com.yot.wor.domain.RefactoringActionType
 import com.yot.wor.services.RefactoringDetectionService
 
 class RefactoringAnActionListener : AnActionListener {
-    companion object {
-        // Languages natively supported by RefactoringEventListener
-        // For these languages, we skip AnActionListener detection to avoid duplicates
-        private val NATIVELY_SUPPORTED_LANGUAGES = setOf(
-            "JAVA",
-            "JavaScript",
-            "TypeScript",
-            "Python",
-            "PHP",
-            "Ruby",
-            "Go",
-            "HTML",
-            "CSS",
-            "XML"
-        )
-
-        private val NATIVELY_SUPPORTED_EXTENSIONS = setOf(
-            "java",
-            "js", "jsx", "ts", "tsx",
-            "py",
-            "php",
-            "rb",
-            "go",
-            "html", "htm",
-            "css", "scss", "sass",
-            "xml"
-        )
-    }
-
     override fun afterActionPerformed(action: AnAction, event: AnActionEvent, result: AnActionResult) {
         val project = event.project ?: return
         val actionId = event.actionManager.getId(action) ?: return
 
         thisLogger().debug("Action performed: $actionId")
 
-        // Check if this is a natively supported language
-        // If yes, RefactoringEventListener will handle it
-        val virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE)
-        val psiFile = ReadAction.compute<PsiFile?, RuntimeException> { event.getData(CommonDataKeys.PSI_FILE) }
-
-        val fileExtension = virtualFile?.extension
-        val languageName = psiFile?.language?.displayName
-
-        if (fileExtension != null && fileExtension in NATIVELY_SUPPORTED_EXTENSIONS) {
-            thisLogger().debug("Skipping $actionId for .$fileExtension file (natively supported by RefactoringEventListener)")
-            return
-        }
-
-        if (languageName != null && languageName in NATIVELY_SUPPORTED_LANGUAGES) {
-            thisLogger().debug("Skipping $actionId for $languageName (natively supported by RefactoringEventListener)")
-            return
-        }
-
-        // Try to map the action ID to a refactoring type
-        val actionType = RefactoringActionType.fromIntellijId(actionId)
-
-        if (actionType != null) {
-            val fileName = virtualFile?.name ?: psiFile?.name
-
-            val elementName = ReadAction.compute<String?, RuntimeException> { event.getData(CommonDataKeys.PSI_ELEMENT)?.text?.take(50) }
-
-            val refactoringAction = RefactoringAction(
-                type = actionType,
-                fileName = fileName,
-                elementName = elementName
-            )
-
-            val detectionService = RefactoringDetectionService.getInstance(project)
-            detectionService.onRefactoringDetected(refactoringAction)
-
-            thisLogger().info("Action detected via AnActionListener: ${refactoringAction.type.displayName} in ${fileName ?: "unknown"} (${languageName ?: fileExtension ?: "unknown language"}) (+${refactoringAction.xpReward} XP)")
-        } else
-        // Log unknown refactoring actions for debugging
+        val actionType = RefactoringActionType.fromIntellijId(actionId) ?: run {
             if (actionId.contains("extract", ignoreCase = true) ||
                 actionId.contains("refactor", ignoreCase = true) ||
                 actionId.contains("inline", ignoreCase = true) ||
                 actionId.contains("introduce", ignoreCase = true) ||
                 actionId.contains("rename", ignoreCase = true)
             ) {
-                thisLogger().warn("Unknown refactoring action ID: $actionId (language: ${languageName ?: fileExtension ?: "unknown"})")
+                thisLogger().warn("Unknown refactoring action ID: $actionId")
             }
+            return
+        }
+
+        val virtualFile = ReadAction.compute<VirtualFile?, RuntimeException> { event.getData(CommonDataKeys.VIRTUAL_FILE) }
+        val elementName = ReadAction.compute<String?, RuntimeException> { event.getData(CommonDataKeys.PSI_ELEMENT)?.text?.take(50) }
+
+        val refactoringAction = RefactoringAction(
+            type = actionType,
+            fileName = virtualFile?.name,
+            elementName = elementName
+        )
+
+        RefactoringDetectionService.getInstance(project).onRefactoringDetected(refactoringAction)
+        thisLogger().info("Action detected: ${refactoringAction.type.displayName} in ${virtualFile?.name ?: "unknown"} (+${refactoringAction.xpReward} XP)")
     }
 }

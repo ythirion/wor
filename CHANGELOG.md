@@ -4,7 +4,7 @@
 
 ### Fixed
 
-- Bug fix for latest version
+- Simplify plugin by removing hack for intercepting events
 
 ## [0.1.1] - 2026-03-04
 

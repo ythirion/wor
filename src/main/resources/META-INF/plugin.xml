@@ -19,11 +19,6 @@
         <projectService serviceImplementation="com.yot.wor.settings.WoRSettings"/>
     </extensions>
 
-    <projectListeners>
-        <listener class="com.yot.wor.listeners.RefactoringEventListenerImpl"
-                  topic="com.intellij.refactoring.listeners.RefactoringEventListener"/>
-    </projectListeners>
-
     <applicationListeners>
         <listener class="com.yot.wor.listeners.RefactoringAnActionListener"
                   topic="com.intellij.openapi.actionSystem.ex.AnActionListener"/>
