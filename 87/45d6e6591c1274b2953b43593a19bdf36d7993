@@ -1,0 +1,16 @@
+gradle.properties
+  h_0a88d9aba8622a 6
+CHANGELOG.md
+  h_0a88d9aba8622a 5-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "8745d6e6591c1274b2953b43593a19bdf36d7993",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
