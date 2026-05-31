@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Add "Refactorings" tab to describe supported refactoring actions
+
 ### Fixed
 
 - Simplify plugin by removing hack for intercepting events
