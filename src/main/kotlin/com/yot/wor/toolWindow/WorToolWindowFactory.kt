@@ -24,6 +24,14 @@ class WorToolWindowFactory : ToolWindowFactory {
             false
         )
         toolWindow.contentManager.addContent(questsContent)
+
+        val refactoringsPanel = RefactoringsPanel()
+        val refactoringsContent = contentFactory.createContent(
+            refactoringsPanel.getContent(),
+            "🔧 Refactorings",
+            false
+        )
+        toolWindow.contentManager.addContent(refactoringsContent)
     }
 
     override fun shouldBeAvailable(project: Project) = true
