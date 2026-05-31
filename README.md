@@ -1,6 +1,6 @@
 # World Of Refactoring
 
-![Build](https://github.com/ythirion/wor/workflows/Build/badge.svg)
+[![Build](https://github.com/ythirion/wor/actions/workflows/build.yml/badge.svg)](https://github.com/ythirion/wor/actions/workflows/build.yml)
 [![Version](https://img.shields.io/jetbrains/plugin/v/30127-wor.svg)](https://plugins.jetbrains.com/plugin/30127-wor)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/30127-wor.svg)](https://plugins.jetbrains.com/plugin/30127-wor)
 [![Claude Code](https://img.shields.io/badge/Built%20with-Claude%20Code-blue.svg)](https://claude.ai/code)
