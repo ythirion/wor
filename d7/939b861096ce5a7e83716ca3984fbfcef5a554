@@ -1,0 +1,28 @@
+src/main/kotlin/com/yot/wor/toolWindow/RefactoringsPanel.kt
+  s_264861aa294944::t_347901e451a740 1-110
+src/main/kotlin/com/yot/wor/domain/RefactoringActionType.kt
+  s_264861aa294944::t_d37ce5615c20bd 7-9,12-99,102-109,112-119
+src/main/kotlin/com/yot/wor/toolWindow/WorToolWindowFactory.kt
+  s_264861aa294944::t_7dc95b1838b6e9 27-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "d7939b861096ce5a7e83716ca3984fbfcef5a554",
+  "prompts": {},
+  "humans": {
+    "h_0a88d9aba8622a": {
+      "author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  },
+  "sessions": {
+    "s_264861aa294944": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0963da63-93c1-4fae-9afe-0aaa7e93ccdc",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Yoan Thirion <yoan.thirion@gmail.com>"
+    }
+  }
+}
